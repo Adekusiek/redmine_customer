@@ -20,15 +20,15 @@ class SupportsController < ApplicationController
     else
       issue_num = issue_num.to_s
     end
+    subject_header = "CS" + Date.today.year.to_s + "JP" + issue_num
 
     domain = params[:session][:email].split("@")[1]
-
     company_code = "XXX"
     company_code = CompanyCode.find_by(domain: domain).code if CompanyCode.find_by(domain: domain)
 
     issue = Issue.create({
                 project_id: @project,
-                subject: "CS" + Date.today.year.to_s + "JP" + issue_num + "(" + company_code + ")",
+                subject: subject_header + "(" + company_code + ")",
                 # Tracker is compulsory
                 # Need to change later here
                 assigned_to_id: User.current.id,
@@ -36,7 +36,6 @@ class SupportsController < ApplicationController
                 author_id: User.current.id,
                 start_date: Date.today
       })
-    issue.save
 
     license_id = 0
     if params[:session][:license_num]
@@ -51,8 +50,13 @@ class SupportsController < ApplicationController
       })
 
 # prepare called value
-  
-    AcceptNotifyMailer.notify(issue).deliver_later
+    company_code == "XXX" ?  subject = subject_header : subject = subject_header + "(" + company_code + ")"
+
+    if params[:session][:license_num]
+      AcceptNotifyMailer.notify_with_license(subject, customer).deliver_later
+    else
+      AcceptNotifyMailer.notify_without_license(subject, customer).deliver_later
+    end
 
     redirect_to issue_path(issue)
   end
