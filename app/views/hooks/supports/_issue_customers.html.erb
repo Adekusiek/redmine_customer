@@ -1,0 +1,74 @@
+
+<hr>
+<div class="splitcontent">
+  <div class="splitcontentleft">
+    <div class="attribute">
+      <div class="label"><strong>Email:</strong></div>
+      <div class="value"><%= @issue_customer.customer.email if @issue_customer.customer %></div>
+    </div>
+    <div class="attribute">
+      <div class="label"><strong>Name:</strong></div>
+      <div class="value"><%= @issue_customer.customer.family_name if @issue_customer.customer %>
+        <%= @issue_customer.customer.given_name if @issue_customer.customer %></div>
+    </div>
+  </div>
+
+  <div class="splitcontentleft">
+    <div class="attribute">
+      <div class="label"><strong>Company:</strong></div>
+      <div class="value"><%= @issue_customer.customer.company if @issue_customer.customer %></div>
+    </div>
+    <div class="attribute">
+      <div class="label"><strong>Department:</strong></div>
+      <div class="value"><%= @issue_customer.customer.dept if @issue_customer.customer %></div>
+    </div>
+  </div>
+
+  <div class="splitcontentleft">
+    <div class="attribute">
+      <div class="label"><strong>License Number:</strong></div>
+      <% if @issue_customer.license.nil? %>
+        <div class="value"> N/A </div>
+      <% else %>
+        <div class="value"><%= @issue_customer.license.license_num %></div>
+      <% end %>
+    </div>
+    <div class="attribute">
+      <div class="label"><strong>Status:</strong></div>
+      <% if @issue_customer.license.nil? || @issue_customer.license.license_num == 0 %>
+        <div class="value"> N/A </div>
+      <% else %>
+        <% if @issue_customer.license.status %>
+          <div class="value">Activated</div>
+        <% else %>
+          <div class="value">Deactivated</div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="contextual">
+  <a onclick="$('#support-update-form').toggle(); $('#relation_issue_to_id').focus(); return false;" href="#">Update</a>
+</div>
+
+<%= form_tag(issue_supports_path(@issue), method: "PATCH", id: "support-update-form", style: "display: none;") do %>
+  <hr>
+  <p><strong>Update Customer Data</strong></p>
+
+  <%= label :session, :email %>
+  <% if @issue_customer.customer.nil? %>
+    <%= text_field :session, :email, value: "N/A" %>
+  <% else %>
+    <%= text_field :session, :email, value: @issue_customer.customer.email %>
+  <% end %>
+
+  <%= label :session, :license_num %>
+  <% if @issue_customer.license.nil? || @issue_customer.license.license_num == 0 %>
+    <%= text_field :session, :license_num, value: "N/A" %>
+  <% else %>
+    <%= text_field :session, :license_num, value: @issue_customer.license.license_num %>
+  <% end %>
+  <%= submit_tag  'Update'  %>
+  <a href="#" onclick="$(&quot;#support-update-form&quot;).hide();; return false;">Cancel</a>
+<% end %>

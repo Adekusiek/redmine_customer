@@ -1,0 +1,10 @@
+<p><strong> Create a ticket for Customer Support</strong></p>
+
+<%= form_tag(project_supports_path(@project), method: "POST") do %>
+  <%= label :session, :Customer_Email %>
+  <%= text_field  :session, :email %>
+  <br>
+  <%= label :session, :License_Number %>
+  <%= text_field  :session, :license_num, placeholder: "CM-XXXX" %>
+  <%= submit_tag  'Create'  %>
+<% end %>
