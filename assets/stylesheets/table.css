@@ -1,0 +1,46 @@
+table.setting {
+	border-collapse: collapse;
+	text-align: left;
+	line-height: 1.5;
+
+}
+table.setting thead th {
+	padding: 10px;
+	font-weight: bold;
+	vertical-align: top;
+	color: #369;
+	border-bottom: 3px solid #036;
+}
+table.setting tbody th {
+	width: 100px;
+	padding: 5px;
+	font-weight: bold;
+	vertical-align: top;
+	border-bottom: 1px solid #ccc;
+	background: #f3f6f7;
+}
+table.setting td {
+	width: 250px;
+	padding: 5px;
+	vertical-align: top;
+	border-bottom: 1px solid #ccc;
+}
+
+table.setting td.button {
+	width: 100px;
+}
+
+.square_btn {
+    display: inline-block;
+    padding: 1px 3px;
+    text-decoration: none;
+    color: #67c5ff;
+    border: solid 2px #67c5ff;
+    border-radius: 3px;
+    transition: .4s;
+}
+
+.square_btn:hover {
+    background: #67c5ff;
+    color: white;
+}

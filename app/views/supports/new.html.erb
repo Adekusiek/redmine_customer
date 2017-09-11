@@ -1,3 +1,5 @@
+<%= stylesheet_link_tag 'table', :plugin => 'issue_customers' %>
+
 <p><strong> Create a ticket for Customer Support</strong></p>
 
 <%= form_tag(project_supports_path(@project), method: "POST") do %>
@@ -8,3 +10,40 @@
   <%= text_field  :session, :license_num, placeholder: "CM-XXXX" %>
   <%= submit_tag  'Create'  %>
 <% end %>
+
+<br>
+
+<br>
+
+<a onclick="$('#company_code_table').toggle(); return false;" href="#">Setting</a>
+
+<div id="company_code_table" style= "display: none;">
+  <table class="setting">
+  	<thead>
+  	<tr>
+  		<th scope="cols">社名コード</th>
+  		<th scope="cols">ドメイン</th>
+      <th scope="cols"></th>
+  	</tr>
+  	</thead>
+  	<tbody>
+      <% @company_codes.each do |company_code| %>
+    	<tr>
+    		<th scope="row"><%= company_code.code %></th>
+    		<td><%= company_code.domain %></td>
+        <td class="button"><%= link_to "Delete", company_code_path(company_code, project_id: @project), method: :delete %></td>
+    	</tr>
+      <% end %>
+      <tr>
+        <%= form_for @company_code  do |f| %>
+          <th scope="row"><%= f.text_field :code %></th>
+          <td><%= f.text_field :domain %></td>
+          <input type="hidden" name="project_id" value="<%= @project %>" id="company_code_project_id">
+          <td class="button"><%= f.submit :Add  %></td>
+        <% end %>
+    	</tr>
+
+  	</tbody>
+  </table>
+  <a href="#" onclick="$(&quot;#company_code_table&quot;).hide();; return false;">Hide</a>
+</div>

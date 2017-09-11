@@ -3,6 +3,8 @@ class SupportsController < ApplicationController
 	before_filter :find_project, only: [:new, :create]
 
   def new
+    @company_codes = CompanyCode.all
+    @company_code = CompanyCode.new
   end
 
   def create
@@ -30,7 +32,7 @@ class SupportsController < ApplicationController
                 # Tracker is compulsory
                 # Need to change later here
                 assigned_to_id: User.current.id,
-                tracker_id: 1,
+                tracker_id: 3,
                 author_id: User.current.id,
                 start_date: Date.today
       })
@@ -48,6 +50,7 @@ class SupportsController < ApplicationController
                 license_id: license_id
       })
 
+    AcceptNotifyMailer.notify.deliver_now
     redirect_to issue_path(issue)
   end
 
@@ -65,31 +68,6 @@ class SupportsController < ApplicationController
 
     issue_customer.save
     redirect_to issue_path(issue_customer.issue)
-
-		# task = Task.find(params[:task_id].to_i)
-		# task.done = params[:checked].present? && params[:checked] == 'true' ? 1 : 0
-		# task.save
-    #
-		# checked_num = 0
-		# task.operation.task.each do |op_task|
-		# 	if op_task.done == 1
-		# 		checked_num = checked_num + 1
-		# 	end
-		# end
-    #
-		# issue = Issue.find(task.operation.issue_id)
-		# issue.done_ratio = (BigDecimal(checked_num.to_s) / BigDecimal(task.operation.task.length.to_s)) * 100
-		# if issue.done_ratio >= 100
-		# 	issue.status = IssueStatus.find(OperationConfig.where(project_id: issue.project.id)[0].done_status_id)
-		# elsif issue.done_ratio < 100 && issue.done_ratio > 0
-		# 	issue.status = IssueStatus.find(OperationConfig.where(project_id: issue.project.id)[0].progress_status_id)
-		# end
-		# issue.save
-    #
-		# task.operation.time_entry.hours = (BigDecimal(issue.done_ratio.to_s) * BigDecimal(task.operation.operation_master.estimated_hours.to_s)) / 100
-		# task.operation.time_entry.save
-    #
-		# render :nothing => true, :status => 200
 
 	end
 

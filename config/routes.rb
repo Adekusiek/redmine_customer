@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 	resources :projects, only: [:new, :create] do
 		get 'supports/new' => 'supports#new'
     post 'supports/' => 'supports#create'
-
 	end
+
+	post 'company_codes' => 'company_codes#create', as: "company_codes"
+	delete 'company_codes/:id' => 'company_codes#destroy', as: "company_code"
 end
