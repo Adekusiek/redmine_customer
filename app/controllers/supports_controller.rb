@@ -50,7 +50,10 @@ class SupportsController < ApplicationController
                 license_id: license_id
       })
 
-    AcceptNotifyMailer.notify.deliver_now
+# prepare called value
+  
+    AcceptNotifyMailer.notify(issue).deliver_later
+
     redirect_to issue_path(issue)
   end
 
