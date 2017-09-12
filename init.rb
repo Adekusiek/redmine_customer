@@ -6,6 +6,9 @@ Rails.configuration.to_prepare do
 	unless IssuesController.included_modules.include? Supports::IssuesControllerPatch
 		IssuesController.send(:include, Supports::IssuesControllerPatch)
 	end
+	# Attachment class override
+	Attachment.send :prepend, Files::AttachmentPatch
+
 end
 
 Redmine::Plugin.register :issue_customers do

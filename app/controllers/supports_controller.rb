@@ -32,7 +32,7 @@ class SupportsController < ApplicationController
                 # Tracker is compulsory
                 # Need to change later here
                 assigned_to_id: User.current.id,
-                tracker_id: 3,
+                tracker_id: 1,
                 author_id: User.current.id,
                 start_date: Date.today
       })
@@ -51,7 +51,6 @@ class SupportsController < ApplicationController
 
 # prepare called value
     company_code == "XXX" ?  subject = subject_header : subject = subject_header + "(" + company_code + ")"
-
     if params[:session][:license_num]
       AcceptNotifyMailer.notify_with_license(subject, customer).deliver_later
     else
