@@ -15,9 +15,9 @@
 
 <br>
 
-<a onclick="$('#company_code_table').toggle(); return false;" href="#">Setting</a>
+<a onclick="$('#support-setting').toggle(); return false;" href="#">Setting</a>
 
-<div id="company_code_table" style= "display: none;">
+<div id="support-setting", style= "display: none;">
   <table class="setting">
   	<thead>
   	<tr>
@@ -45,5 +45,31 @@
 
   	</tbody>
   </table>
-  <a href="#" onclick="$(&quot;#company_code_table&quot;).hide();; return false;">Hide</a>
+
+<!--
+  <table class="setting">
+  	<thead>
+  	<tr>
+  		<th scope="cols">カテゴリー</th>
+  		<th scope="cols"></th>
+      <th scope="cols"></th>
+  	</tr>
+  	</thead>
+  	<tbody>
+      <tr>
+        <%= form_tag(category_import_path(@project.id), method: "POST") do %>
+          <th scope="row">インポート元</th>
+          <td><%= text_field  :session, :name, placeholder: "CS2016" %></td>
+          <td class="button"><%= submit_tag  'Import'  %></td>
+        <% end %>
+    	</tr>
+
+  	</tbody>
+  </table>
+-->
+  <br>
+
+  <br>
+
+  <a href="#" onclick="$(&quot;#support-setting&quot;).hide();; return false;">Hide</a>
 </div>

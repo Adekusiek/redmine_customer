@@ -12,7 +12,7 @@ table.setting thead th {
 	border-bottom: 3px solid #036;
 }
 table.setting tbody th {
-	width: 100px;
+	width: 200px;
 	padding: 5px;
 	font-weight: bold;
 	vertical-align: top;
@@ -20,7 +20,7 @@ table.setting tbody th {
 	background: #f3f6f7;
 }
 table.setting td {
-	width: 250px;
+	width: 350px;
 	padding: 5px;
 	vertical-align: top;
 	border-bottom: 1px solid #ccc;

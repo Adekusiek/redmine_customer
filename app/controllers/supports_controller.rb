@@ -1,6 +1,6 @@
 class SupportsController < ApplicationController
   unloadable
-	before_filter :find_project, only: [:new, :create]
+	before_filter :find_project, only: [:new, :create, :category_import]
 
   def new
     @company_codes = CompanyCode.all
@@ -76,6 +76,15 @@ class SupportsController < ApplicationController
     redirect_to issue_path(issue_customer.issue)
 
 	end
+
+  def category_import
+    import_project = Project.find_by(name: params[:session][:name])
+    import_project.issue_categories.each do |category|
+      IssueCategory.create(project_id: @project, name: category.name, assigned_to_id: category.assigned_to_id)
+    end
+
+    redirect_to project_supports_new_path(@project)
+  end
 
   private
   def find_project

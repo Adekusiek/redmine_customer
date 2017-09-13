@@ -11,4 +11,6 @@ Rails.application.routes.draw do
 
 	post 'company_codes' => 'company_codes#create', as: "company_codes"
 	delete 'company_codes/:id' => 'company_codes#destroy', as: "company_code"
+
+	post 'category_import/:id' => 'support#category_import', as: "category_import"
 end

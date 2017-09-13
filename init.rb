@@ -3,11 +3,10 @@ require_dependency 'supports/hooks'
 
 Rails.configuration.to_prepare do
 	require_dependency 'issues_controller'
-	unless IssuesController.included_modules.include? Supports::IssuesControllerPatch
-		IssuesController.send(:include, Supports::IssuesControllerPatch)
-	end
-	# Attachment class override
-	Attachment.send :prepend, Files::AttachmentPatch
+	# unless IssuesController.included_modules.include? Supports::IssuesControllerPatch
+	# 	IssuesController.send(:include, Supports::IssuesControllerPatch)
+	# end
+	IssuesController.send :prepend, Supports::IssuesControllerPatch
 
 end
 
