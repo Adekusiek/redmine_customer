@@ -1,6 +1,6 @@
 class SupportsController < ApplicationController
   unloadable
-	before_filter :find_project, only: [:new, :create, :category_import]
+	before_filter :find_project, only: [:new, :create]
 
   def new
     @company_codes = CompanyCode.all
@@ -32,7 +32,7 @@ class SupportsController < ApplicationController
                 # Tracker is compulsory
                 # Need to change later here
                 assigned_to_id: User.current.id,
-                tracker_id: 1,
+                tracker_id: 3,
                 author_id: User.current.id,
                 start_date: Date.today
       })
@@ -78,9 +78,10 @@ class SupportsController < ApplicationController
 	end
 
   def category_import
+    @project = Project.find(params[:id])
     import_project = Project.find_by(name: params[:session][:name])
     import_project.issue_categories.each do |category|
-      IssueCategory.create(project_id: @project, name: category.name, assigned_to_id: category.assigned_to_id)
+      IssueCategory.create(project_id: @project.id, name: category.name, assigned_to_id: category.assigned_to_id)
     end
 
     redirect_to project_supports_new_path(@project)

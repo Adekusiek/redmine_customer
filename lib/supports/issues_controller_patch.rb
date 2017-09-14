@@ -33,6 +33,7 @@ module Supports
 			  logger.info("I'm called from Issues Controller Patch update method") if logger
 				issue = Issue.find(params[:id])
 				today = Date.today
+				return if !params[:attachments]
 				i = params[:attachments].length
 				for num in 1..i do
 						attachment = Attachment.find_by(container_id: params[:id], filename: params[:attachments][:"#{num.to_s}"][:filename])

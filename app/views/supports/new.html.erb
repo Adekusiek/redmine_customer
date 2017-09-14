@@ -46,7 +46,7 @@
   	</tbody>
   </table>
 
-<!--
+
   <table class="setting">
   	<thead>
   	<tr>
@@ -57,7 +57,7 @@
   	</thead>
   	<tbody>
       <tr>
-        <%= form_tag(category_import_path(@project.id), method: "POST") do %>
+        <%= form_tag(category_import_path(@project), method: "POST") do %>
           <th scope="row">インポート元</th>
           <td><%= text_field  :session, :name, placeholder: "CS2016" %></td>
           <td class="button"><%= submit_tag  'Import'  %></td>
@@ -66,7 +66,7 @@
 
   	</tbody>
   </table>
--->
+
   <br>
 
   <br>

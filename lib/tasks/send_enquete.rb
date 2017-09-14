@@ -1,18 +1,18 @@
-# This script supp
-module SendEnquete
-  def search
+
+class SendEnquete
+  def self.search
     issues = Issue.where(updated_on: Time.months_ago(1)..Time.today)
     issue_sent_enquetes = Enquete.where(sent_date: Date.last_year..Date.today).issue
     issues.each do |issue|
       if issue.issue_status.is_closed == 1
         unless issue_sent_enquetes.include?(issue)
-          self.send(issue)
+          send(issue)
         end
       end
     end
   end
 
-  def send(issue)
+  def self.send(issue)
     issue_customer = IssueCustomer.find_by(issue_id: issue.id).includes(:customer)
     if issue_customer.customer.customer_enquete.accept_flag == 1 && issue_customer.customer.customer_enquete.last_reply_date <  6.months_ago
       #Mailer
@@ -30,3 +30,5 @@ module SendEnquete
 
   end
 end
+
+SendEnquete.search
