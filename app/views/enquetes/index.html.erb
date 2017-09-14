@@ -1,0 +1,38 @@
+<table>
+  <thead>
+  <tr>
+    <th>Send Date</th>
+    <th>#</th>
+    <th>Customer</th>
+    <th>Email</th>
+    <th>送信許可</th>
+    <th>回収済み</th>
+  </tr>
+  </thead>
+  <tbody>
+    <% @enquetes.each do |enquete| %>
+    <tr>
+      <td><%= enquete.sent_date %></th>
+      <td><%= enquete.issue.subject %></td>
+      <td><%= enquete.customer.family_name %> <%= enquete.customer.given_name %></td>
+      <td><%= enquete.customer.email %></td>
+      <td>
+        <% if enquete.customer_enquete.accept_flag == 0 %>
+          <%= link_to "許可", refuse_enquete_path(enquete), method: :patch %>
+        <% else %>
+          <%= link_to "拒否", accept_enquete_path(enquete), method: :patch %>
+        <% end %>
+      </td>
+      <td>
+        <% if enquete.recieved_flag == 0 %>
+          <%= link_to "未返答", set_reply_path(enquete), method: :patch %>
+        <% else %>
+          返答済み
+        <% end %>
+      </td>
+
+    </tr>
+    <% end %>
+
+  </tbody>
+</table>
