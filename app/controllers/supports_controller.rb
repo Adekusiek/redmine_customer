@@ -9,7 +9,14 @@ class SupportsController < ApplicationController
 
   def create
 
-    customer = Customer.where(email: params[:session][:email]).first_or_create
+    customer = Customer.find_by(email: params[:session][:email])
+
+    unless customer
+      customer = Customer.new(email: params[:session][:email])
+      customer.build_customer_enquete
+      customer.save
+    end
+
 
     issue_num = @project.issues.count + 1
 
@@ -32,7 +39,7 @@ class SupportsController < ApplicationController
                 # Tracker is compulsory
                 # Need to change later here
                 assigned_to_id: User.current.id,
-                tracker_id: 3,
+                tracker_id: 1,
                 author_id: User.current.id,
                 start_date: Date.today
       })

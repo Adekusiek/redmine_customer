@@ -17,15 +17,15 @@
       <td><%= enquete.customer.family_name %> <%= enquete.customer.given_name %></td>
       <td><%= enquete.customer.email %></td>
       <td>
-        <% if enquete.customer_enquete.accept_flag == 0 %>
-          <%= link_to "許可", refuse_enquete_path(enquete), method: :patch %>
+        <% if enquete.customer_enquete.accept_flag == true %>
+          <%= link_to "拒否する", refuse_enquete_path(enquete.customer_enquete), method: :patch %>
         <% else %>
-          <%= link_to "拒否", accept_enquete_path(enquete), method: :patch %>
+          <%= link_to "許可する", accept_enquete_path(enquete.customer_enquete), method: :patch %>
         <% end %>
       </td>
       <td>
-        <% if enquete.recieved_flag == 0 %>
-          <%= link_to "未返答", set_reply_path(enquete), method: :patch %>
+        <% if !enquete.recieved_flag  %>
+          <%= link_to "送信完了", set_reply_path(enquete), method: :patch %>
         <% else %>
           返答済み
         <% end %>

@@ -3,7 +3,7 @@ class CreateCustomerEnquetes < ActiveRecord::Migration
     create_table :customer_enquetes do |t|
       t.integer :customer_id
       t.boolean :accept_flag, default: true
-      t.date :last_reply_date
+      t.date :last_reply_date, default: Date.today.prev_year
     end
   end
 end

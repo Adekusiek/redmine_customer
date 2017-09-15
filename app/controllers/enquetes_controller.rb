@@ -9,20 +9,20 @@ class EnquetesController < ApplicationController
 
   def accept_enquete
     customer_enquete = CustomerEnquete.find(params[:id])
-    customer_enquete.update(accept_flag: 1)
+    customer_enquete.update(accept_flag: true)
     redirect_to :back
   end
 
   def refuse_enquete
     customer_enquete = CustomerEnquete.find(params[:id])
-    customer_enquete.update(accept_flag: 0)
+    customer_enquete.update(accept_flag: false)
     redirect_to :back
   end
 
   def set_reply
-      enquete = Enquete.find(params[:id]).includes(:customer)
-      enquete.update(recieved_flag: 0)
-      enquete.customer.customer_enquete.update(last_reply_date: Date.today)
+      enquete = Enquete.find(params[:id])
+      enquete.update(recieved_flag: true)
+      enquete.customer_enquete.update(last_reply_date: Date.today)
       redirect_to :back
   end
 
