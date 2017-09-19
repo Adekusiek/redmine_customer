@@ -7,11 +7,11 @@ module Exceltodb
       sheet = xlsm.sheet(sheet_name)
       if  sheet_name[8..10].to_i < 68
        row = 13
-       set_issue_journal(row, sheet, sheet_name)
+       set_issue_journal_simple(row, sheet, sheet_name)
 
       else
         row = 18
-        issue = set_issue_journal(row, sheet, sheet_name)
+        issue = set_issue_journal_simple(row, sheet, sheet_name)
 
           customer = Customer.find_by(email: sheet.cell(13, 3))
           if customer
@@ -22,13 +22,11 @@ module Exceltodb
               })
           end
       end
-
-      break if sheet_name[8..10].to_i > 70
     end
 
   end
 
-  def self.set_issue_journal(row, sheet, sheet_name)
+  def self.set_issue_journal_simple(row, sheet, sheet_name)
     issue = Issue.create({
                 tracker_id: 1,
                 project_id: 1,
@@ -67,6 +65,161 @@ module Exceltodb
 
       return issue
   end
+
+  def self.seventeen
+    xlsm = Roo::Spreadsheet.open('C:/Users/kek/Desktop/CS2017JP_Master_new.xlsm')
+    sheet_names = xlsm.sheets
+    master_sheet = xlsm.sheet("Master")
+
+    sheet_names.each do |sheet_name|
+      next unless sheet_name.include? "CS2017"
+      sheet = xlsm.sheet(sheet_name)
+      if  sheet_name[8..10].to_i < 288
+       colomun = 6
+      else
+       colomun = 7
+      end
+      issue = set_issue_journal_complex(sheet, sheet_name, colomun)
+
+      customer = Customer.find_by(email: sheet.cell(13, 3))
+      license = License.find_by(license_num: sheet.cell(7, 3)) unless sheet.cell(7, 3) == "-"
+      license = 0 if !license
+
+      if customer
+        IssueCustomer.create({
+          issue_id: issue.id,
+          customer_id: customer.id,
+          license_id: license
+          })
+
+        master_row = sheet_name[8..10].to_i + 3
+        recieved_flag = false
+        if master_sheet.cell(master_row, 17)
+          customer.customer_enquete.update(last_reply_date: master_sheet.cell(master_row, 17).gsub(/(/)/, "-"))
+          recieved_flag = true
+        end
+
+        if master_sheet.cell(master_row, 16) && issue.done_ratio == 100
+          sent_date = "2017-01-01"
+          if master_sheet.cell(master_row, 16).include? "2017"
+            sent_date = master_sheet.cell(master_row, 16).gsub(/(/)/, "-")
+          else
+            sent_date = issue.due_date
+          end
+          
+          Enquete.create({
+            sent_date: sent_date,
+            customer_id: customer.id,
+            issue_id: issue.id,
+            project_id: 10,
+            customer_enquete_id: customer.customer_enquete.id,
+            recieved_flag: recieved_flag
+            })
+        end
+
+      end
+
+    end
+
+  end
+
+  def self.set_issue_journal_complex(sheet, sheet_name, colomun)
+    start_date = sheet.cell(18, 5).gsub(/(/)/, "-")
+    status_id = 1
+    done_ratio = 0
+    case sheet.cell(4,3)
+    when "Closed" then
+      status_id = 5
+      done_ratio = 100
+    when "Investigation (domestic)" then
+      status_id =2
+    when "Request support to GmbH" then
+      status_id =10
+    when "Open" then
+      status_id = 1
+    when "Clarifying by customer" then
+      status_id = 11
+    when "Closing confirmation to customer" then
+      status_id = 4
+    end
+
+    assigned_to_id = author_id = set_user_id(sheet.cell(9, 3))
+
+    issue = Issue.create({
+                tracker_id: 1,
+                project_id: 1,
+                subject: sheet_name,
+                description: sheet.cell(18, 3),
+                due_date: "2016-12-31",
+                status_id: status_id,
+                assigned_to_id: assigned_to_id,
+                priority_id: 2,
+                author_id: author_id,
+                lock_version: 1,
+                start_date: start_date,
+                done_ratio: done_ratio,
+                lft: 1,
+                rgt: 2,
+                is_private: 0
+            })
+
+      row = 18
+      while sheet.cell(row, 3)  do
+        row +=1
+        comment =  ""
+        if sheet.cell(row, 4)
+          comment = "From #{sheet.cell(row, 4)} \n\n" + sheet.cell(row, 3)
+        else
+          comment = sheet.cell(row, 3)
+        end
+
+        Journal.create({
+          journalized_id: issue.id,
+          journalized_type: "Issue",
+          user_id: author_id,
+          notes: comment
+          })
+
+        if sheet.cell(row, colomun) && set_user_id(sheet.cell(row, 4)) != 0
+          TimeEntry.create({
+            project_id: 10,
+            user_id: set_user_id(sheet.cell(row, 4)),
+            issue_id: issue.id,
+            hours: sheet.cell(row, colomun),
+            activity_id: 1,
+            spent_on: sheet.cell(row, 5).gsub(/(/)/, "-"),
+            tyear: "2,017",
+            tmonth: "1",
+            tweek: "1"
+            })
+        end
+      end
+      due_date = sheet.cell(row - 1, 5).gsub(/(/)/, "-")
+      end_datetime = due_date + " 23:59:59"
+      issue.update(updated_on: end_datetime, due_date: due_date)
+
+      return issue
+  end
+
+  def self.set_user_id(staff_code)
+    user_id = 0
+    case staff_code
+    when "tem" then
+      user_id = 7
+    when "alm" then
+      user_id = 5
+    when "hit" then
+      user_id = 1
+    when "yug" then
+      user_id = 9
+    when "kek" then
+      user_id = 10
+    when "hik" then
+      user_id = 11
+    end
+    return user_id
+  end
 end
 
-Exceltodb.sixteen
+#Exceltodb.sixteen
+Exceltodb.seventeen
