@@ -1,4 +1,5 @@
 module Exceltodb
+
   def self.sixteen
     xlsm = Roo::Spreadsheet.open('//10.1.1.100/public/FSI/10_CustomerSupport/99_OldVer/CS_Master_backup/CS2016JP_Master_new_mod.xlsm')
     sheet_names = xlsm.sheets
@@ -66,18 +67,18 @@ module Exceltodb
       return issue
   end
 
+
   def self.seventeen
     xlsm = Roo::Spreadsheet.open('C:/Users/kek/Desktop/CS2017JP_Master_new.xlsm')
     sheet_names = xlsm.sheets
-    master_sheet = xlsm.sheet("Master")
-
     sheet_names.each do |sheet_name|
       next unless sheet_name.include? "CS2017"
       sheet = xlsm.sheet(sheet_name)
+      colomun = 0
       if  sheet_name[8..10].to_i < 288
-       colomun = 6
-      else
        colomun = 7
+      else
+       colomun = 6
       end
       issue = set_issue_journal_complex(sheet, sheet_name, colomun)
 
@@ -94,24 +95,28 @@ module Exceltodb
 
         master_row = sheet_name[8..10].to_i + 3
         recieved_flag = false
-        if master_sheet.cell(master_row, 17)
-          customer.customer_enquete.update(last_reply_date: master_sheet.cell(master_row, 17).gsub(/(/)/, "-"))
+
+        master_sheet = xlsm.sheet("Master")
+
+        if master_sheet.cell(master_row, 'Q')
+          customer.customer_enquete.update(last_reply_date: master_sheet.cell(master_row, 17))
           recieved_flag = true
         end
 
-        if master_sheet.cell(master_row, 16) && issue.done_ratio == 100
-          sent_date = "2017-01-01"
-          if master_sheet.cell(master_row, 16).include? "2017"
-            sent_date = master_sheet.cell(master_row, 16).gsub(/(/)/, "-")
+        if master_sheet.cell(master_row, 'P') != nil && issue.done_ratio == 100
+
+          sent_date = ""
+          if master_sheet.cell(master_row, 'P').kind_of?(Date)
+            sent_date = master_sheet.cell(master_row, 'P')
           else
-            sent_date = issue.due_date
+            sent_date = issue.due_date.prev_year
           end
-          
-          Enquete.create({
+
+          Enquete.create!({
             sent_date: sent_date,
             customer_id: customer.id,
             issue_id: issue.id,
-            project_id: 10,
+            project_id: 1,
             customer_enquete_id: customer.customer_enquete.id,
             recieved_flag: recieved_flag
             })
@@ -119,29 +124,44 @@ module Exceltodb
 
       end
 
+      break if sheet_name[8..10].to_i > 5
     end
 
   end
 
   def self.set_issue_journal_complex(sheet, sheet_name, colomun)
-    start_date = sheet.cell(18, 5).gsub(/(/)/, "-")
+    start_date = sheet.cell(18, 5)
     status_id = 1
     done_ratio = 0
     case sheet.cell(4,3)
-    when "Closed" then
-      status_id = 5
-      done_ratio = 100
-    when "Investigation (domestic)" then
-      status_id =2
-    when "Request support to GmbH" then
-      status_id =10
-    when "Open" then
-      status_id = 1
-    when "Clarifying by customer" then
-      status_id = 11
-    when "Closing confirmation to customer" then
-      status_id = 4
-    end
+    # when "Closed" then
+    #   status_id = 5
+    #   done_ratio = 100
+    # when "Investigation (domestic)" then
+    #   status_id =2
+    # when "Request support to GmbH" then
+    #   status_id =10
+    # when "Open" then
+    #   status_id = 1
+    # when "Clarifying by customer" then
+    #   status_id = 11
+    # when "Closing confirmation to customer" then
+    #   status_id = 4
+    # end
+  when "Closed" then
+    status_id = 5
+    done_ratio = 100
+  when "Investigation (domestic)" then
+    status_id = 2
+  when "Request support to GmbH" then
+    status_id = 3
+  when "Open" then
+    status_id = 1
+  when "Clarifying by customer" then
+    status_id = 4
+  when "Closing confirmation to customer" then
+    status_id = 6
+  end
 
     assigned_to_id = author_id = set_user_id(sheet.cell(9, 3))
 
@@ -150,7 +170,6 @@ module Exceltodb
                 project_id: 1,
                 subject: sheet_name,
                 description: sheet.cell(18, 3),
-                due_date: "2016-12-31",
                 status_id: status_id,
                 assigned_to_id: assigned_to_id,
                 priority_id: 2,
@@ -181,22 +200,21 @@ module Exceltodb
           })
 
         if sheet.cell(row, colomun) && set_user_id(sheet.cell(row, 4)) != 0
-          TimeEntry.create({
-            project_id: 10,
-            user_id: set_user_id(sheet.cell(row, 4)),
-            issue_id: issue.id,
-            hours: sheet.cell(row, colomun),
-            activity_id: 1,
-            spent_on: sheet.cell(row, 5).gsub(/(/)/, "-"),
-            tyear: "2,017",
-            tmonth: "1",
-            tweek: "1"
-            })
+          user = User.find_by(set_user_id(sheet.cell(row, 4)))
+          time_entry = TimeEntry.new
+          time_entry.project = issue.project
+          time_entry.issue = issue
+          time_entry.user = user
+          time_entry.spent_on = sheet.cell(row, 5)
+          time_entry.activity_id = 8
+          time_entry.hours = sheet.cell(row, colomun)
+          time_entry.save
         end
       end
-      due_date = sheet.cell(row - 1, 5).gsub(/(/)/, "-")
-      end_datetime = due_date + " 23:59:59"
-      issue.update(updated_on: end_datetime, due_date: due_date)
+      due_date = sheet.cell(row - 1, 5)
+#      end_datetime = due_date + " 23:59:59"
+#      issue.update(updated_on: end_datetime, due_date: due_date)
+      issue.update(closed_on: due_date.to_datetime, due_date: due_date)
 
       return issue
   end
@@ -204,20 +222,33 @@ module Exceltodb
   def self.set_user_id(staff_code)
     user_id = 0
     case staff_code
-    when "tem" then
-      user_id = 7
-    when "alm" then
-      user_id = 5
-    when "hit" then
-      user_id = 1
-    when "yug" then
-      user_id = 9
-    when "kek" then
-      user_id = 10
-    when "hik" then
-      user_id = 11
-    end
-    return user_id
+    # when "tem" then
+    #   user_id = 7
+    # when "alm" then
+    #   user_id = 5
+    # when "hit" then
+    #   user_id = 1
+    # when "yug" then
+    #   user_id = 9
+    # when "kek" then
+    #   user_id = 10
+    # when "hik" then
+    #   user_id = 11
+    # end
+  when "tem" then
+    user_id = 6
+  when "alm" then
+    user_id = 10
+  when "hit" then
+    user_id = 8
+  when "yug" then
+    user_id = 9
+  when "kek" then
+    user_id = 5
+  when "hik" then
+    user_id = 7
+  end
+      return user_id
   end
 end
 
