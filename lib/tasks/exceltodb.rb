@@ -73,6 +73,7 @@ module Exceltodb
     sheet_names = xlsm.sheets
     sheet_names.each do |sheet_name|
       next unless sheet_name.include? "CS2017"
+      puts sheet_name
       sheet = xlsm.sheet(sheet_name)
       colomun = 0
       if  sheet_name[8..10].to_i < 288
@@ -83,14 +84,21 @@ module Exceltodb
       issue = set_issue_journal_complex(sheet, sheet_name, colomun)
 
       customer = Customer.find_by(email: sheet.cell(13, 3))
-      license = License.find_by(license_num: sheet.cell(7, 3)) unless sheet.cell(7, 3) == "-"
-      license = 0 if !license
+      if !customer
+        customer = Customer.new(email: sheet.cell(13, 3))
+        customer.build_customer_enquete
+        customer.save
+      end
+
+      license_id = 0
+      license = License.find_by(license_num: sheet.cell(7, 3))
+      license_id = license.id if license
 
       if customer
         IssueCustomer.create({
           issue_id: issue.id,
           customer_id: customer.id,
-          license_id: license
+          license_id: license_id
           })
 
         master_row = sheet_name[8..10].to_i + 3
@@ -116,7 +124,8 @@ module Exceltodb
             sent_date: sent_date,
             customer_id: customer.id,
             issue_id: issue.id,
-            project_id: 1,
+#            project_id: 1,
+            project_id: 18,
             customer_enquete_id: customer.customer_enquete.id,
             recieved_flag: recieved_flag
             })
@@ -124,7 +133,6 @@ module Exceltodb
 
       end
 
-      break if sheet_name[8..10].to_i > 5
     end
 
   end
@@ -163,18 +171,33 @@ module Exceltodb
     status_id = 6
   end
 
-    assigned_to_id = author_id = set_user_id(sheet.cell(9, 3))
+    author_id = assigned_to_id = set_user_id(sheet.cell(9, 3))
+    issue = Issue.create!({
+                # tracker_id: 1,
+                # project_id: 1,
+                # subject: sheet_name,
+                # description: sheet.cell(18, 3),
+                # status_id: status_id,
+                # assigned_to_id: assigned_to_id,
+                # priority_id: 2,
+                # author_id: author_id,
+                # lock_version: 1,
+                # start_date: start_date,
+                # done_ratio: done_ratio,
+                # lft: 1,
+                # rgt: 2,
+                # is_private: 0
 
-    issue = Issue.create({
-                tracker_id: 1,
-                project_id: 1,
+                # Production
+                tracker_id: 3,
+                project_id: 18,
                 subject: sheet_name,
                 description: sheet.cell(18, 3),
                 status_id: status_id,
                 assigned_to_id: assigned_to_id,
                 priority_id: 2,
                 author_id: author_id,
-                lock_version: 1,
+                lock_version: 4,
                 start_date: start_date,
                 done_ratio: done_ratio,
                 lft: 1,
@@ -206,50 +229,53 @@ module Exceltodb
           time_entry.issue = issue
           time_entry.user = user
           time_entry.spent_on = sheet.cell(row, 5)
-          time_entry.activity_id = 8
+#          time_entry.activity_id = 8
+          time_entry.activity_id = 10
           time_entry.hours = sheet.cell(row, colomun)
           time_entry.save
         end
       end
-      due_date = sheet.cell(row - 1, 5)
-#      end_datetime = due_date + " 23:59:59"
-#      issue.update(updated_on: end_datetime, due_date: due_date)
-      issue.update(closed_on: due_date.to_datetime, due_date: due_date)
-
+      if issue.done_ratio == 100
+        due_date = sheet.cell(row - 1, 5)
+        due_date = sheet.cell(row - 2, 5) if !due_date
+  #      end_datetime = due_date + " 23:59:59"
+  #      issue.update(updated_on: end_datetime, due_date: due_date)
+        issue.update(closed_on: due_date.to_datetime, due_date: due_date) if due_date.kind_of?(Date)
+      end
       return issue
   end
 
   def self.set_user_id(staff_code)
-    user_id = 0
+    user_id = 1
     case staff_code
+    when "tem" then
+      user_id = 7
+    when "alm" then
+      user_id = 5
+    when "hit" then
+      user_id = 1
+    when "yug" then
+      user_id = 9
+    when "kek" then
+      user_id = 10
+    when "hik" then
+      user_id = 11
+    end
     # when "tem" then
-    #   user_id = 7
+    #   user_id = 6
     # when "alm" then
-    #   user_id = 5
+    #   user_id = 10
     # when "hit" then
-    #   user_id = 1
+    #   user_id = 8
     # when "yug" then
     #   user_id = 9
     # when "kek" then
-    #   user_id = 10
+    #   user_id = 5
     # when "hik" then
-    #   user_id = 11
+    #   user_id = 7
     # end
-  when "tem" then
-    user_id = 6
-  when "alm" then
-    user_id = 10
-  when "hit" then
-    user_id = 8
-  when "yug" then
-    user_id = 9
-  when "kek" then
-    user_id = 5
-  when "hik" then
-    user_id = 7
-  end
-      return user_id
-  end
+        return user_id
+    end
 end
 
 #Exceltodb.sixteen
