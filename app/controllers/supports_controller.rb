@@ -58,10 +58,10 @@ class SupportsController < ApplicationController
 
 # prepare called value
     company_code == "XXX" ?  subject = subject_header : subject = subject_header + "(" + company_code + ")"
-    if params[:session][:license_num]
-      AcceptNotifyMailer.notify_with_license(subject, customer).deliver_later
-    else
+    if params[:session][:license_num].blank?
       AcceptNotifyMailer.notify_without_license(subject, customer).deliver_later
+    else
+      AcceptNotifyMailer.notify_with_license(subject, customer).deliver_later
     end
 
     redirect_to issue_path(issue)
@@ -74,10 +74,8 @@ class SupportsController < ApplicationController
     customer = Customer.where(email: params[:session][:email]).first_or_create
     issue_customer.customer_id = customer.id
 
-    if params[:session][:license_num]
-      license = License.find_by(license_num: params[:session][:license_num])
-      issue_customer.license_id = license.id if license
-    end
+    license = License.find_by(license_num: params[:session][:license_num])
+    issue_customer.license_id = license.id if license
 
     issue_customer.save
     redirect_to issue_path(issue_customer.issue)

@@ -38,7 +38,7 @@ module Supports
 				for num in 1..i do
 						attachment = Attachment.find_by(container_id: params[:id], filename: params[:attachments][:"#{num.to_s}"][:filename])
 						original_path = attachment.diskfile
-						dir = "//10.1.1.100/public/FSI/10_CustomerSupport/test/#{issue.subject}/#{today}/"
+						dir = "//10.1.1.100/public/FSI/10_CustomerSupport/#{issue.subject}/#{today}/"
 						FileUtils::mkdir_p dir
 			      FileUtils.cp(original_path, dir + attachment.filename)
 						puts attachment.diskfile
