@@ -69,7 +69,7 @@ module Exceltodb
 
 
   def self.seventeen
-    xlsm = Roo::Spreadsheet.open('C:/Users/kek/Desktop/CS2017JP_Master_new.xlsm')
+    xlsm = Roo::Spreadsheet.open('C:/Users/IPGJ-Demo/Desktop/CS2017JP_Master_new.xlsm')
     sheet_names = xlsm.sheets
     sheet_names.each do |sheet_name|
       next unless sheet_name.include? "CS2017"
@@ -142,34 +142,39 @@ module Exceltodb
     status_id = 1
     done_ratio = 0
     case sheet.cell(4,3)
+	# Production
+    when "Closed" then
+      status_id = 5
+      done_ratio = 100
+    when "Investigation (domestic)" then
+      status_id =2
+    when "Request support to GmbH" then
+      status_id =10
+    when "Open" then
+      status_id = 1
+    when "Clarifying by customer" then
+      status_id = 11
+    when "Closing confirmation to customer" then
+      status_id = 4
+    when "Hold" then
+      status_id = 12
+	  
+    end
+    
     # when "Closed" then
-    #   status_id = 5
-    #   done_ratio = 100
+    # 	status_id = 5
+    # 	done_ratio = 100
     # when "Investigation (domestic)" then
-    #   status_id =2
+    # 	status_id = 2
     # when "Request support to GmbH" then
-    #   status_id =10
+    # 	status_id = 3
     # when "Open" then
-    #   status_id = 1
+    # 	status_id = 1
     # when "Clarifying by customer" then
-    #   status_id = 11
+    # 	status_id = 4
     # when "Closing confirmation to customer" then
-    #   status_id = 4
+    # 	status_id = 6
     # end
-  when "Closed" then
-    status_id = 5
-    done_ratio = 100
-  when "Investigation (domestic)" then
-    status_id = 2
-  when "Request support to GmbH" then
-    status_id = 3
-  when "Open" then
-    status_id = 1
-  when "Clarifying by customer" then
-    status_id = 4
-  when "Closing confirmation to customer" then
-    status_id = 6
-  end
 
     author_id = assigned_to_id = set_user_id(sheet.cell(9, 3))
     issue = Issue.create!({
@@ -238,8 +243,6 @@ module Exceltodb
       if issue.done_ratio == 100
         due_date = sheet.cell(row - 1, 5)
         due_date = sheet.cell(row - 2, 5) if !due_date
-  #      end_datetime = due_date + " 23:59:59"
-  #      issue.update(updated_on: end_datetime, due_date: due_date)
         issue.update(closed_on: due_date.to_datetime, due_date: due_date) if due_date.kind_of?(Date)
       end
       return issue
