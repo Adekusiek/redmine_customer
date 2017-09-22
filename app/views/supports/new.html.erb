@@ -1,21 +1,31 @@
 <%= stylesheet_link_tag 'table', :plugin => 'issue_customers' %>
 
-<p><strong> Create a ticket for Customer Support</strong></p>
+<p><strong> CS用チケットの作成 </strong></p>
 
 <%= form_tag(project_supports_path(@project), method: "POST") do %>
-  <%= label :session, :Customer_Email %>
-  <%= text_field  :session, :email %>
-  <br>
-  <%= label :session, :License_Number %>
-  <%= text_field  :session, :license_num, placeholder: "CM-XXXX" %>
-  <%= submit_tag  'Create'  %>
+  <div class="new-ticket">
+    <%= label :session, "顧客メール", class: "new-ticket-label" %>
+    <%= text_field  :session, :email, class: "new-ticket-input" %>
+  </div>
+  <div class="new-ticket">
+    <%= label :session, "ライセンス番号", class: "new-ticket-label" %>
+    <%= text_field  :session, :license_num, placeholder: "CM-XXXX", class: "new-ticket-input" %>
+  </div>
+  <div class="new-ticket">
+    <%= label :session, "受領メール", class: "new-ticket-label" %>
+    送信: <%= radio_button :session, :send_flag, '0', {:checked => true} %>
+    非送信 : <%= radio_button :session, :send_flag, '1', {} %><br />
+  </div>
+  <div class="new-ticket">
+    <%= submit_tag  '作成'  %>
+  </div>
 <% end %>
 
 <br>
 
 <br>
 
-<a onclick="$('#support-setting').toggle(); return false;" href="#">Setting</a>
+<a onclick="$('#support-setting').toggle(); return false;" href="#">設定</a>
 
 <div id="support-setting", style= "display: none;">
   <table class="setting">
@@ -37,7 +47,7 @@
       <tr>
         <%= form_for @company_code  do |f| %>
           <th scope="row"><%= f.text_field :code %></th>
-          <td><%= f.text_field :domain %></td>
+          <td><%= f.text_field :domain, style: "width: 250px" %></td>
           <input type="hidden" name="project_id" value="<%= @project %>" id="company_code_project_id">
           <td class="button"><%= f.submit :Add  %></td>
         <% end %>
@@ -71,5 +81,5 @@
 
   <br>
 
-  <a href="#" onclick="$(&quot;#support-setting&quot;).hide();; return false;">Hide</a>
+  <a href="#" onclick="$(&quot;#support-setting&quot;).hide();; return false;">隠す</a>
 </div>

@@ -44,3 +44,16 @@ table.setting td.button {
     background: #67c5ff;
     color: white;
 }
+
+.new-ticket {
+	padding: 5px;
+}
+.new-ticket-label {
+	display:block;
+	float:left;
+	width: 150px;
+}
+
+.new-ticket-input {
+	width: 250px;
+}

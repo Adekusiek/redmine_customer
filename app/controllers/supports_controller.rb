@@ -57,11 +57,13 @@ class SupportsController < ApplicationController
       })
 
 # prepare called value
-    company_code == "XXX" ?  subject = subject_header : subject = subject_header + "(" + company_code + ")"
-    if params[:session][:license_num].blank?
-      AcceptNotifyMailer.notify_without_license(subject, customer).deliver_later
-    else
-      AcceptNotifyMailer.notify_with_license(subject, customer).deliver_later
+    if params[:session][:send_flag] == 0
+      company_code == "XXX" ?  subject = subject_header : subject = subject_header + "(" + company_code + ")"
+      if params[:session][:license_num].blank?
+        AcceptNotifyMailer.notify_without_license(subject, customer).deliver_later
+      else
+        AcceptNotifyMailer.notify_with_license(subject, customer).deliver_later
+      end
     end
 
     redirect_to issue_path(issue)
