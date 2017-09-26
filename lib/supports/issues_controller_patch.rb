@@ -20,7 +20,7 @@
 # 		end
 # 	end
 # end
-
+require 'fileutils'
 module Supports
 	module IssuesControllerPatch
 		def show
@@ -38,10 +38,14 @@ module Supports
 				for num in 1..i do
 						attachment = Attachment.find_by(container_id: params[:id], filename: params[:attachments][:"#{num.to_s}"][:filename])
 						original_path = attachment.diskfile
+						logger.info(original_path) if logger
+						logger.info(attachment.filename) if logger
+
 						dir = "//10.1.1.100/public/FSI/10_CustomerSupport/#{issue.subject}/#{today}/"
-						FileUtils::mkdir_p dir
+
+						FileUtils.mkdir_p(dir, {:mode => 0755 })
 			      FileUtils.cp(original_path, dir + attachment.filename)
-						puts attachment.diskfile
+#						puts attachment.diskfile
 				end
 		end
 	end

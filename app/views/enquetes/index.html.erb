@@ -1,18 +1,24 @@
 <table>
   <thead>
   <tr>
-    <th>Send Date</th>
+    <th>送信日</th>
     <th>#</th>
-    <th>Customer</th>
-    <th>Email</th>
+    <th>顧客名</th>
+    <th>メール</th>
     <th>送信許可</th>
     <th>回収済み</th>
   </tr>
   </thead>
+  <% neglect_date = Date.new(2016, 12, 31) %>
   <tbody>
     <% @enquetes.each do |enquete| %>
-    <tr>
-      <td><%= enquete.sent_date %></th>
+      <% next if enquete.issue.nil? %>
+      <% if enquete.sent_date > neglect_date %>
+        <td><%= enquete.sent_date %></td>
+      <% else %>
+        <td>送信無し</td>
+      <% end %>
+
       <td><%= enquete.issue.subject %></td>
       <td><%= enquete.customer.family_name %> <%= enquete.customer.given_name %></td>
       <td><%= enquete.customer.email %></td>
@@ -24,8 +30,10 @@
         <% end %>
       </td>
       <td>
-        <% if !enquete.recieved_flag  %>
-          <%= link_to "送信完了", set_reply_path(enquete), method: :patch %>
+        <% if enquete.sent_date < neglect_date %>
+          送信無し
+        <% elsif !enquete.recieved_flag  %>
+          <%= link_to "返答あり", set_reply_path(enquete), method: :patch %>
         <% else %>
           返答済み
         <% end %>
@@ -36,3 +44,5 @@
 
   </tbody>
 </table>
+
+<%= paginate @enquetes %>

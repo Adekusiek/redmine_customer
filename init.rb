@@ -26,7 +26,7 @@ Redmine::Plugin.register :issue_customers do
 		permission :manage_enquetes, :enquetes => [:index]
 	end
 
-	menu :project_menu, :supports, { :controller => 'supports', :action => 'new'}, :param => :project_id
-	menu :project_menu, :enquetes, { :controller => 'enquetes', :action => 'index'}, :param => :project_id
+	menu :project_menu, :supports, { :controller => 'supports', :action => 'new'}, :param => :project_id, :caption => "サポート"
+	menu :project_menu, :enquetes, { :controller => 'enquetes', :action => 'index'}, :param => :project_id, :caption => "アンケート"
 
 end

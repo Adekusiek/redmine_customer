@@ -39,7 +39,7 @@ class SupportsController < ApplicationController
                 # Tracker is compulsory
                 # Need to change later here
                 assigned_to_id: User.current.id,
-                tracker_id: 1,
+                tracker_id: 3,
                 author_id: User.current.id,
                 start_date: Date.today
       })

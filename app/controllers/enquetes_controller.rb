@@ -4,7 +4,7 @@ class EnquetesController < ApplicationController
 
   def index
     @project = Project.find(params[:project_id])
-    @enquetes =  Enquete.where(project_id: @project.id).includes(:customer, :issue, :customer_enquete)
+    @enquetes =  Enquete.where(project_id: @project.id).includes(:customer, :issue, :customer_enquete).page(params[:page])
   end
 
   def accept_enquete
