@@ -30,7 +30,7 @@ module Supports
 
 		def update
 			super
-			  logger.info("I'm called from Issues Controller Patch update method") if logger
+#			  logger.info("I'm called from Issues Controller Patch update method") if logger
 				issue = Issue.find(params[:id])
 				today = Date.today
 				return if !params[:attachments]
@@ -38,14 +38,11 @@ module Supports
 				for num in 1..i do
 						attachment = Attachment.find_by(container_id: params[:id], filename: params[:attachments][:"#{num.to_s}"][:filename])
 						original_path = attachment.diskfile
-						logger.info(original_path) if logger
-						logger.info(attachment.filename) if logger
 
-						dir = "//10.1.1.100/public/FSI/10_CustomerSupport/#{issue.subject}/#{today}/"
-
-						FileUtils.mkdir_p(dir, {:mode => 0755 })
+#						dir = "//10.1.1.100/public/FSI/10_CustomerSupport/#{issue.subject}/#{today}/"
+						dir = "C:/Bitnami/redmine-3.4.2-3/apps/redmine/htdocs/tmp/docs4upload/#{issue.subject}/#{today}/"
+						FileUtils.mkdir_p(dir)
 			      FileUtils.cp(original_path, dir + attachment.filename)
-#						puts attachment.diskfile
 				end
 		end
 	end
