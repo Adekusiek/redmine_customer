@@ -12,6 +12,10 @@
     <%= text_field  :session, :license_num, placeholder: "CM-XXXX", class: "new-ticket-input" %>
   </div>
   <div class="new-ticket">
+    <%= label :session, "問合せ内容", class: "new-ticket-label" %>
+    <%= text_area  :session, :description, class: "new-ticket-input-area" %>
+  </div>
+  <div class="new-ticket">
     <%= label :session, "受領メール", class: "new-ticket-label" %>
     送信: <%= radio_button :session, :send_flag, '0', {:checked => true} %>
     非送信 : <%= radio_button :session, :send_flag, '1', {} %><br />

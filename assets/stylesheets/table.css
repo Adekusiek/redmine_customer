@@ -57,3 +57,11 @@ table.setting td.button {
 .new-ticket-input {
 	width: 250px;
 }
+
+.new-ticket-input-area {
+	font-family: Verdana, sans-serif;
+	font-size: 12px;
+	width: 500px;
+	min-height: 150px;
+
+}

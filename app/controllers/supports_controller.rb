@@ -36,8 +36,7 @@ class SupportsController < ApplicationController
     issue = Issue.create({
                 project_id: @project,
                 subject: subject_header + "(" + company_code + ")",
-                # Tracker is compulsory
-                # Need to change later here
+                description: params[:session][:description],
                 assigned_to_id: User.current.id,
                 tracker_id: 3,
                 author_id: User.current.id,
