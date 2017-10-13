@@ -60,27 +60,56 @@
   <div class="contextual">
     <a onclick="$('#support-update-form').toggle(); $('#relation_issue_to_id').focus(); return false;" href="#">更新</a>
   </div>
+<div id="support-update-form" style="display: none;">
+  <hr>
+  <div class="splitcontent">
+    <div class="splitcontentleft">
+    <%= form_tag(issue_supports_path(@issue), method: "PATCH") do %>
+      <p><strong>顧客情報の更新</strong></p>
 
-  <%= form_tag(issue_supports_path(@issue), method: "PATCH", id: "support-update-form", style: "display: none;") do %>
-    <hr>
-    <p><strong>顧客情報の更新</strong></p>
+      <%= label :session, "メール", style: "display: block; float: left; width: 100px" %>
+      <% if @issue_customer.customer.nil? %>
+        <%= text_field :session, :email, value: "N/A", style: "width: 250px" %>
+      <% else %>
+        <%= text_field :session, :email, value: @issue_customer.customer.email, style: "width: 250px" %>
+      <% end %>
+      <br/>
+      <%= label :session, "ライセンス番号", style: "display: block; float: left; width: 100px" %>
+      <% if @issue_customer.license.nil? || @issue_customer.license.license_num == 0 %>
+        <%= text_field :session, :license_num, value: "N/A", style: "width: 250px" %>
+      <% else %>
+        <%= text_field :session, :license_num, value: @issue_customer.license.license_num, style: "width: 250px" %>
+      <% end %>
+      <%= submit_tag  '更新'  %>
+        <% end %>
+    </div>
+    <div class="splitcontentright">
+      <p><strong> アンケート </strong></p>
+      <div class="attribute">
+      <div class="label">ステータス:</div>
+          <% if !@enquete %>
+            未送信
+          <% elsif @enquete.sent_date < Date.new(2016, 12, 31) %>
+            送信スキップ
+          <% else %>
+            送信済み
+          <% end %>
+      </div>
+      <div class="attribute">
+        <div class="label">送信設定:</div>
+          <% if !@enquete %>
+            <%= link_to "アンケートスキップ", skip_enquete_path(@issue), method: "PATCH", class: "btn" %>
+          <% else %>
+            送信済み
+          <% end %>
+      </div>
 
-    <%= label :session, "メール", style: "display: block; float: left; width: 100px" %>
-    <% if @issue_customer.customer.nil? %>
-      <%= text_field :session, :email, value: "N/A", style: "width: 250px" %>
-    <% else %>
-      <%= text_field :session, :email, value: @issue_customer.customer.email, style: "width: 250px" %>
-    <% end %>
-    <br/>
-    <%= label :session, "ライセンス番号", style: "display: block; float: left; width: 100px" %>
-    <% if @issue_customer.license.nil? || @issue_customer.license.license_num == 0 %>
-      <%= text_field :session, :license_num, value: "N/A", style: "width: 250px" %>
-    <% else %>
-      <%= text_field :session, :license_num, value: @issue_customer.license.license_num, style: "width: 250px" %>
-    <% end %>
-    <%= submit_tag  '更新'  %>
+    </div>
+  </div>
     <div class="contextual">
     <a href="#" onclick="$(&quot;#support-update-form&quot;).hide();; return false;">戻る</a>
   </div>
-  <% end %>
+
+
+</div>
 <% end %>

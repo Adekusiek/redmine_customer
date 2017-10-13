@@ -25,6 +25,7 @@ module Supports
 	module IssuesControllerPatch
 		def show
 			@issue_customer = IssueCustomer.where(issue_id: @issue.id).first_or_create
+			@enquete = Enquete.find_by(issue_id: @issue.id)
 			super
 		end
 

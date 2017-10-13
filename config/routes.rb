@@ -17,4 +17,5 @@ Rails.application.routes.draw do
 	patch 'accept_enquete/:id' => 'enquetes#accept_enquete', as: "accept_enquete"
 	patch 'set_reply/:id' => 'enquetes#set_reply', as: "set_reply"
 	get 'project/:project_id/enquetes'=> 'enquetes#index'
+	patch 'skip_enquete/:id' => 'supports#skip_enquete', as: "skip_enquete"
 end

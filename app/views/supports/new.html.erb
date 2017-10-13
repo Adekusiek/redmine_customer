@@ -17,8 +17,8 @@
   </div>
   <div class="new-ticket">
     <%= label :session, "受領メール", class: "new-ticket-label" %>
-    送信: <%= radio_button :session, :send_flag, '0', {:checked => true} %>
-    非送信 : <%= radio_button :session, :send_flag, '1', {} %><br />
+    送信: <%= radio_button :session, :send_flag, '0', {} %>
+    非送信 : <%= radio_button :session, :send_flag, '1', {:checked => true} %><br />
   </div>
   <div class="new-ticket">
     <%= submit_tag  '作成'  %>

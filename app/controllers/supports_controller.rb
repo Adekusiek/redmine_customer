@@ -94,6 +94,26 @@ class SupportsController < ApplicationController
     redirect_to project_supports_new_path(@project)
   end
 
+  def skip_enquete
+    issue_customer = IssueCustomer.find_by(issue_id: params[:id])
+    enquete = Enquete.new({
+      sent_date: Date.new(2016, 1, 1),
+      customer_id: issue_customer.customer_id,
+      issue_id: issue_customer.issue_id,
+      project_id: issue_customer.issue.project.id,
+      customer_enquete_id: issue_customer.customer.customer_enquete.id
+      })
+
+    if enquete.save!
+      flash[:notice] = "このチケットのアンケート送信は行われません"
+    else
+      flash[:alert] = "アンケート送信スキップの設定に失敗しました"
+    end
+
+    redirect_to :back
+
+  end
+
   private
   def find_project
 		@project = Project.find(params[:project_id])
