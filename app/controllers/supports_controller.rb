@@ -11,13 +11,14 @@ class SupportsController < ApplicationController
 
     customer = Customer.find_by(email: params[:session][:email])
 
+# if no customer is attached to the email, create new customer and customer_enquete to save the date of last reply and preference of receiving mail
     unless customer
       customer = Customer.new(email: params[:session][:email])
       customer.build_customer_enquete
       customer.save
     end
 
-
+# give cs number
     issue_num = @project.issues.count + 1
 
     if issue_num < 10
@@ -29,6 +30,7 @@ class SupportsController < ApplicationController
     end
     subject_header = "CS" + Date.today.year.to_s + "JP" + issue_num
 
+# search company code from email
     domain = params[:session][:email].split("@")[1]
     company_code = "XXX"
     company_code = CompanyCode.find_by(domain: domain).code if CompanyCode.find_by(domain: domain)
@@ -43,6 +45,7 @@ class SupportsController < ApplicationController
                 start_date: Date.today
       })
 
+# check license status
     license_id = 0
     if params[:session][:license_num]
       license = License.find_by(license_num: params[:session][:license_num])
