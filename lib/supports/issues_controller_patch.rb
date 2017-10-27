@@ -25,7 +25,7 @@ module Supports
 					original_path = attachment.diskfile
 
 #						dir = "//10.1.1.100/public/FSI/10_CustomerSupport/#{issue.subject}/#{today}/"
-					dir = "C:/Bitnami/redmine-3.3.1-0/apps/redmine/htdocs/tmp/docs4upload/#{issue.subject}/#{today}/"
+					dir = "C:/Bitnami/redmine-3.4.2-4/apps/redmine/htdocs/tmp/docs4upload/#{issue.subject}/#{today}/"
 					FileUtils.mkdir_p(dir)
 		      FileUtils.cp(original_path, dir + attachment.filename)
 			end
