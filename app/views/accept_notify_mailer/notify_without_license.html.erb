@@ -1,8 +1,8 @@
 <p>本メールは自動送信です。</p>
 
 <% if @customer.company && @customer.family_name %>
-  <p><%= @customer.company  %></p>
-  <p><%= @customer.family_name %> 様</p>
+  <p><%= @customer.company  %><br>
+  <%= @customer.family_name %> 様</p>
 <% end %>
 
 <p>お世話になっております。<br><p>
