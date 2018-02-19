@@ -1,11 +1,11 @@
 
 module UpdateDb
   def self.update_customer
-    xlsm = Roo::Spreadsheet.open('//10.1.1.100/Data/share/01_Opportunity/IPG-J_Opportunity_all.xlsm')
+    xlsx = Roo::Spreadsheet.open('//10.1.1.100/Data/share/01_Opportunity/IPG-J_Opportunity_all.xlsx')
 #    xlsm = Roo::Spreadsheet.open('/Users/kawaharakeisuke/Desktop/IPG-J_Opportunity_all.xlsm')
 
 #    xlsm = Roo::Spreadsheet.open('C:/Users/kek/Desktop/test/IPG-J_Opportunity_all.xlsm')
-    mysheet = xlsm.sheet('Customer')
+    mysheet = xlsx.sheet('Customer')
     i = 0
     mysheet.column(1).each do |email|
       i += 1
@@ -44,10 +44,13 @@ module UpdateDb
 
   def self.update_license
     xlsx = Roo::Spreadsheet.open('//10.1.1.100/Data/share/11_License/IPG_Automotive_KK_License.xlsx')
+	puts "Im called 2"
+	puts xlsx
 #    xlsx = Roo::Spreadsheet.open('C:/Users/kek/Desktop/test/IPG_Automotive_KK_License.xlsx')
     mysheet = xlsx.sheet('Customer')
     i = 0
     mysheet.column(3).each do |license_num|
+	puts license_num
       i += 1
       next if i < 3 || !license_num
       license = License.where(license_num: license_num).first_or_create
