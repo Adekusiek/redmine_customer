@@ -1,11 +1,8 @@
 
 module UpdateDb
   def self.update_customer
-    xlsx = Roo::Spreadsheet.open('//10.1.1.100/Data/share/01_Opportunity/IPG-J_Opportunity_all.xlsx')
-#    xlsm = Roo::Spreadsheet.open('/Users/kawaharakeisuke/Desktop/IPG-J_Opportunity_all.xlsm')
-
-#    xlsm = Roo::Spreadsheet.open('C:/Users/kek/Desktop/test/IPG-J_Opportunity_all.xlsm')
-    mysheet = xlsx.sheet('Customer')
+    xlsm = Roo::Spreadsheet.open('//10.1.1.100/Data/share/01_Opportunity/IPG-J_Opportunity_all.xlsx')
+    mysheet = xlsm.sheet('Customer')
     i = 0
     mysheet.column(1).each do |email|
       i += 1
