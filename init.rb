@@ -3,11 +3,10 @@ require_dependency 'supports/hooks'
 
 Rails.configuration.to_prepare do
 	require_dependency 'issues_controller'
-	# unless IssuesController.included_modules.include? Supports::IssuesControllerPatch
-	# 	IssuesController.send(:include, Supports::IssuesControllerPatch)
-	# end
 	IssuesController.send :prepend, Supports::IssuesControllerPatch
 
+	require_dependency 'mail_handler'
+	MailHandler.send :prepend, Supports::MailHandlerPatch
 end
 
 Redmine::Plugin.register :issue_customers do

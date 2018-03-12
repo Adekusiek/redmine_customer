@@ -38,7 +38,7 @@ class SendEnquete
           customer_enquete_id: issue_customer.customer.customer_enquete.id
           })
         #Mailer
-        EnqueteMailer.enquete_send_mailer(issue.subject, issue_customer.customer).deliver
+        EnqueteMailer.enquete_send_mailer(issue, issue_customer.customer).deliver
 
         return
       end
