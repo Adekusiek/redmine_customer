@@ -13,7 +13,7 @@ module Supports
 	    headers = [email.in_reply_to, email.references].flatten.compact
 	    subject = email.subject.to_s
 			# do not accept 2 byte character for ticket number identification
-			subject = subject.tr("０-９", "0-9").tr("＃", "#").tr("「", "\[").tr("」", "\]")
+			subject = subject.tr("０-９", "0-9").tr("＃", "#").tr("「", "\[").tr("」", "\]").tr("　", "\s")
 	    if headers.detect {|h| h.to_s =~ MESSAGE_ID_RE}
 	      klass, object_id = $1, $2.to_i
 	      method_name = "receive_#{klass}_reply"

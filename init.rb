@@ -7,6 +7,9 @@ Rails.configuration.to_prepare do
 
 	require_dependency 'mail_handler'
 	MailHandler.send :prepend, Supports::MailHandlerPatch
+
+	IssueQuery.send :prepend, Supports::IssueQueryPatch
+	Issue.send :prepend, Supports::IssuePatch
 end
 
 Redmine::Plugin.register :issue_customers do
