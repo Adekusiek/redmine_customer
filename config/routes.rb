@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     post 'supports/' => 'supports#create'
 	end
 
+
 	post 'company_codes' => 'company_codes#create', as: "company_codes"
 	delete 'company_codes/:id' => 'company_codes#destroy', as: "company_code"
 
@@ -17,5 +18,8 @@ Rails.application.routes.draw do
 	patch 'accept_enquete/:id' => 'enquetes#accept_enquete', as: "accept_enquete"
 	patch 'set_reply/:id' => 'enquetes#set_reply', as: "set_reply"
 	get 'project/:project_id/enquetes'=> 'enquetes#index'
+	get 'project/:project_id/licenses/' => 'licenses#index', as: "licenses"
 	patch 'skip_enquete/:id' => 'supports#skip_enquete', as: "skip_enquete"
+
+
 end

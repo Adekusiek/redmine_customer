@@ -1,0 +1,30 @@
+<%= stylesheet_link_tag 'customer_search', :plugin => 'issue_customers' %>
+
+<p><strong> ライセンスステータスの確認 </strong></p>
+
+<%= form_tag(licenses_path, method: "get") do %>
+  <div class="license-check">
+    <%= label :session, "ライセンス番号", class: "license-check-label" %>
+    <%= select  :session, :CM_category, [["CM", "CM"],["TM", "TM"],["MM", "MM"]] %> -
+    <%= text_field  :session, :license_number,  class: "license-check-input" %>
+  </div>
+  <div class="license-check-button">
+    <%= submit_tag  '検索'  %>
+  </div>
+<% end %>
+
+<div class="license-check-result">
+<% if @license %>
+  <%= @license.license_num %>
+    <% if @license.status == "0" %>
+      <span class="license-check-invalid">　保守期間外！サポート不可！</span>
+    <% else %>
+      <span class="license-check-valid">　保守期間内</span>
+    <% end %>
+
+<% end %>
+
+<% if @nil_flag %>
+  <span class="license-check-invalid"> 存在しないライセンス番号 <span>
+<% end %>
+</div>

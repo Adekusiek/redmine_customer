@@ -21,11 +21,16 @@ Redmine::Plugin.register :issue_customers do
 		permission :manage_supports, :supports => [:new, :create]
 	end
 
+	project_module :licenses do
+		permission :manage_licenses, :licenses => [:index]
+	end
+
 	project_module :enquetes do
 		permission :manage_enquetes, :enquetes => [:index]
 	end
 
 	menu :project_menu, :supports, { :controller => 'supports', :action => 'new'}, :param => :project_id, :caption => "サポート"
+	menu :project_menu, :licenses, { :controller => 'licenses', :action => 'index'}, :param => :project_id, :caption => "電話応対"
 	menu :project_menu, :enquetes, { :controller => 'enquetes', :action => 'index'}, :param => :project_id, :caption => "アンケート"
 
 end
