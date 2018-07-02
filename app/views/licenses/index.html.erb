@@ -5,8 +5,13 @@
 <%= form_tag(licenses_path, method: "get") do %>
   <div class="license-check">
     <%= label :session, "ライセンス番号", class: "license-check-label" %>
-    <%= select  :session, :CM_category, [["CM", "CM"],["TM", "TM"],["MM", "MM"]] %> -
-    <%= text_field  :session, :license_number,  class: "license-check-input" %>
+    <% if @license %>
+      <%= select  :session, :CM_category, [["CM", "CM"],["TM", "TM"],["MM", "MM"]], selected: params[:session][:CM_category] %> -
+      <%= text_field  :session, :license_number,  class: "license-check-input", value: params[:session][:license_number] %>
+    <% else %>
+      <%= select  :session, :CM_category, [["CM", "CM"],["TM", "TM"],["MM", "MM"]] %> -
+      <%= text_field  :session, :license_number,  class: "license-check-input" %>
+    <% end %>
   </div>
   <div class="license-check-button">
     <%= submit_tag  '検索'  %>
@@ -16,10 +21,10 @@
 <div class="license-check-result">
 <% if @license %>
   <%= @license.license_num %>
-    <% if @license.status == "0" %>
-      <span class="license-check-invalid">　保守期間外！サポート不可！</span>
-    <% else %>
+    <% if @license.status %>
       <span class="license-check-valid">　保守期間内</span>
+    <% else %>
+      <span class="license-check-invalid">　保守期間外！サポート不可！</span>
     <% end %>
 
 <% end %>
