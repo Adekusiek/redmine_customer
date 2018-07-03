@@ -21,8 +21,8 @@ Redmine::Plugin.register :issue_customers do
 		permission :manage_supports, :supports => [:new, :create]
 	end
 
-	project_module :licenses do
-		permission :manage_licenses, :licenses => [:index]
+	project_module :telephone_process do
+		permission :manage_telephone_process, :telephone_process => [:index]
 	end
 
 	project_module :enquetes do
@@ -30,7 +30,7 @@ Redmine::Plugin.register :issue_customers do
 	end
 
 	menu :project_menu, :supports, { :controller => 'supports', :action => 'new'}, :param => :project_id, :caption => "サポート"
-	menu :project_menu, :licenses, { :controller => 'licenses', :action => 'index'}, :param => :project_id, :caption => "電話応対"
+	menu :project_menu, :telephone_process, { :controller => 'telephone_process', :action => 'index'}, :param => :project_id, :caption => "電話応対"
 	menu :project_menu, :enquetes, { :controller => 'enquetes', :action => 'index'}, :param => :project_id, :caption => "アンケート"
 
 end

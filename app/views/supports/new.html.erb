@@ -5,11 +5,19 @@
 <%= form_tag(project_supports_path(@project), method: "POST") do %>
   <div class="new-ticket">
     <%= label :session, "顧客メール", class: "new-ticket-label" %>
-    <%= text_field  :session, :email, class: "new-ticket-input" %>
+    <% if @email %>
+      <%= text_field  :session, :email, class: "new-ticket-input", value: @email %>
+    <% else %>
+      <%= text_field  :session, :email, class: "new-ticket-input" %>
+    <% end %>
   </div>
   <div class="new-ticket">
     <%= label :session, "ライセンス番号", class: "new-ticket-label" %>
-    <%= text_field  :session, :license_num, placeholder: "CM-XXXX", class: "new-ticket-input" %>
+    <% if @license %>
+      <%= text_field  :session, :license_num, class: "new-ticket-input", value: @license %>
+    <% else %>
+      <%= text_field  :session, :license_num, placeholder: "CM-XXXX", class: "new-ticket-input" %>
+    <% end %>
   </div>
   <div class="new-ticket">
     <%= label :session, "問合せ内容", class: "new-ticket-label" %>

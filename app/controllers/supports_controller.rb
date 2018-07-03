@@ -1,10 +1,18 @@
 class SupportsController < ApplicationController
   unloadable
-	before_filter :find_project, only: [:new, :create]
+	before_filter :find_project, only: [:new, :new_with_input, :create]
 
   def new
     @company_codes = CompanyCode.all
     @company_code = CompanyCode.new
+  end
+
+  def new_with_input
+    @company_codes = CompanyCode.all
+    @company_code = CompanyCode.new
+    @email = params[:email]
+    @license = params[:license_num]
+    render :new
   end
 
   def create

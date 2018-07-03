@@ -1,0 +1,86 @@
+<%= stylesheet_link_tag 'customer_search', :plugin => 'issue_customers' %>
+
+<p><strong> ライセンスステータスの確認 </strong></p>
+
+<%= form_tag(telephone_process_path, method: "get") do %>
+  <div class="license-check">
+    <%= label :license, :CM_category, "ライセンス番号", class: "license-check-label" %>
+    <% if params[:license] %>
+      <%= select  :license, :CM_category, [["CM", "CM"],["TM", "TM"],["MM", "MM"]], selected: params[:license][:CM_category] %> -
+      <%= text_field :license, :license_number,  class: "license-check-input", value: params[:license][:license_number] %>
+    <% else %>
+      <%= select  :license, :CM_category, [["CM", "CM"],["TM", "TM"],["MM", "MM"]]  %> -
+      <%= text_field :license, :license_number,  class: "license-check-input" %>
+    <% end %>
+  </div>
+  <div class="license-check-button">
+    <%= submit_tag  '検索'  %>
+  </div>
+<% end %>
+
+<div class="license-check-result">
+<% if @license %>
+  <%= @license.license_num %>
+    <% if @license.status %>
+      <span class="license-check-valid">　保守期間内</span>
+    <% else %>
+      <span class="license-check-invalid">　保守期間外！サポート不可！</span>
+    <% end %>
+
+<% end %>
+
+<% if @nil_flag %>
+  <span class="license-check-invalid"> 存在しないライセンス番号 </span>
+<% end %>
+</div>
+
+
+<p><strong> 顧客情報の確認 </strong></p>
+
+<%= search_form_for @q, url: customer_search_path(@project) do |f| %>
+<div class="customer-search">
+  <%= f.label :email_cont, "メールの一部", class: "customer-search-label" %>
+  <%= f.search_field :email_cont, class: "customer-search-input"  %>
+</div>
+<div class="customer-search">
+  <%= f.label :family_name_alphabet_or_given_name_alphabet_cont, "氏名(英)の一部", class: "customer-search-label"  %>
+  <%= f.search_field :family_name_alphabet_or_given_name_alphabet_cont, class: "customer-search-input" %>
+</div>
+<div class="customer-search-button">
+  <%= f.submit "検索" %>
+</div>
+<% end %>
+
+<div class="customer-search-result">
+<% if @customers %>
+<%= form_tag(support_new_with_input_path(@project), method: "POST") do %>
+<table>
+  <thead>
+  <tr>
+    <th></th>
+    <th scope="cols">社名</th>
+    <th scope="cols">部門</th>
+    <th scope="cols">氏名</th>
+    <th scope="cols">アドレス</th>
+  </tr>
+  </thead>
+    <tbody>
+    <% @customers.each do |customer| %>
+      <tr>
+        <td><%= radio_button_tag :email, customer.email %></td>
+        <td scope="row"><%= customer.company %></td>
+        <td scope="row"><%= customer.dept %></td>
+        <td scope="row"><%= customer.full_name %></td>
+        <td scope="row"><%= customer.email %></td>
+      </tr>
+    <% end %>
+    </tbody>
+</table>
+  <%= hidden_field_tag :license_num, "" %>
+  <div class="customer-search-button">
+    <%= submit_tag  'チケット作成'  %>
+  </div>
+<% end %>
+<% end %>
+
+</div>

@@ -19,7 +19,9 @@ module UpdateDb
       if customer
           customer.update({
             family_name: mysheet.cell(i, 5),
+            family_name_alphabet: mysheet.cell(i,79)
             given_name:  mysheet.cell(i, 3),
+            given_name_alphabet:  mysheet.cell(i, 94),
             title:       mysheet.cell(i, 6),
             company:     mysheet.cell(i, 7),
             dept:        mysheet.cell(i, 8)
@@ -28,7 +30,9 @@ module UpdateDb
         customer = Customer.new({
           email:       email,
           family_name: mysheet.cell(i, 5),
+          family_name_alphabet: mysheet.cell(i,79)
           given_name:  mysheet.cell(i, 3),
+          given_name_alphabet:  mysheet.cell(i, 94),
           title:       mysheet.cell(i, 6),
           company:     mysheet.cell(i, 7),
           dept:        mysheet.cell(i, 8)
@@ -45,7 +49,7 @@ module UpdateDb
     deactivate_sheet = xlsx.sheet('Deactivate')
 
     # deactivated sheet contains abondoned license information(invalid), but customer sheet lists the same license number categorized(valid)
-    # give priority to customer sheet and override 
+    # give priority to customer sheet and override
     self.scan_license(deactivate_sheet)
     self.scan_license(customer_sheet)
   end
