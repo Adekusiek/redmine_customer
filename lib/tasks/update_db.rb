@@ -19,7 +19,7 @@ module UpdateDb
       if customer
           customer.update({
             family_name: mysheet.cell(i, 5),
-            family_name_alphabet: mysheet.cell(i,79)
+            family_name_alphabet: mysheet.cell(i,79),
             given_name:  mysheet.cell(i, 3),
             given_name_alphabet:  mysheet.cell(i, 94),
             title:       mysheet.cell(i, 6),
@@ -30,7 +30,7 @@ module UpdateDb
         customer = Customer.new({
           email:       email,
           family_name: mysheet.cell(i, 5),
-          family_name_alphabet: mysheet.cell(i,79)
+          family_name_alphabet: mysheet.cell(i,79),
           given_name:  mysheet.cell(i, 3),
           given_name_alphabet:  mysheet.cell(i, 94),
           title:       mysheet.cell(i, 6),
