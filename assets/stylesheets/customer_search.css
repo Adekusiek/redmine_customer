@@ -13,18 +13,39 @@
 .license-check-result {
 	font-family: Verdana, sans-serif;
 	padding-top: 15px;
-
+	margin-bottom: 30px;
+	display:block;
+	float:left;
+	font-size: 14px;
+	width: 100%;
 }
 
-.license-check-result .license-check-invalid {
-  font-size: 18px;
-  color: red;
+.license-check-result > .license-check-result-show {
+	padding: 5px 0px;
+	width: 100%;
 }
 
-.license-check-result .license-check-valid {
-  font-size: 12px;
-  color: green;
+.license-check-result > .license-check-result-show > .license-check-result-show-unit {
+	padding: 5px 10px;
 }
+
+.license-check-invalid {
+	font-size: 14px;
+	font-style: bold;
+	color: red;
+}
+
+.license-check-valid {
+	font-size: 14px;
+	color: green;
+}
+.license-check-not-exist {
+	font-size: 18px;
+	color: red;
+}
+
+
+
 
 .customer-search {
 	padding-top: 10px;

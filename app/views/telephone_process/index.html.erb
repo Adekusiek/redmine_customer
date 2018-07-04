@@ -1,16 +1,18 @@
 <%= stylesheet_link_tag 'customer_search', :plugin => 'issue_customers' %>
 
-<p><strong> ライセンスステータスの確認 </strong></p>
+<div class="license-check-header">
+  <p><strong> ライセンスステータスの確認 </strong></p>
+</div>
 
 <%= form_tag(telephone_process_path, method: "get") do %>
   <div class="license-check">
-    <%= label :license, :CM_category, "ライセンス番号", class: "license-check-label" %>
-    <% if params[:license] %>
-      <%= select  :license, :CM_category, [["CM", "CM"],["TM", "TM"],["MM", "MM"]], selected: params[:license][:CM_category] %> -
-      <%= text_field :license, :license_number,  class: "license-check-input", value: params[:license][:license_number] %>
+    <%= label :license_check, :CM_category, "ライセンス番号", class: "license-check-label" %>
+    <% if params[:license_check] %>
+      <%= select  :license_check, :CM_category, [["CM", "CM"],["TM", "TM"],["MM", "MM"],["RM", "RM"]], selected: params[:license_check][:CM_category] %> -
+      <%= text_field :license_check, :license_number,  class: "license-check-input", value: params[:license_check][:license_number] %>
     <% else %>
-      <%= select  :license, :CM_category, [["CM", "CM"],["TM", "TM"],["MM", "MM"]]  %> -
-      <%= text_field :license, :license_number,  class: "license-check-input" %>
+      <%= select  :license_check, :CM_category, [["CM", "CM"],["TM", "TM"],["MM", "MM"],["RM", "RM"]]  %> -
+      <%= text_field :license_check, :license_number,  class: "license-check-input" %>
     <% end %>
   </div>
   <div class="license-check-button">
@@ -20,22 +22,37 @@
 
 <div class="license-check-result">
 <% if @license %>
-  <%= @license.license_num %>
-    <% if @license.status %>
+  <div class="license-check-result-show">
+    <span class="license-check-result-show-unit">
+      <%= @license.license_num %>
+    </span>
+    <span class="license-check-result-show-unit">
+      <%= @license.license_type %>
+    </span>
+    <span class="license-check-result-show-unit">
+      <%= @license.show_office_or_hil %>
+    </span>
+    <span class="license-check-result-show-unit">
+      <%= @license.show_hil_type_description  %>
+    </span>
+    <span class="license-check-result-show-unit">
+      <% if @license.status %>
       <span class="license-check-valid">　保守期間内</span>
-    <% else %>
+      <% else %>
       <span class="license-check-invalid">　保守期間外！サポート不可！</span>
-    <% end %>
-
+      <% end %>
+    </span>
+  </div>
 <% end %>
 
 <% if @nil_flag %>
-  <span class="license-check-invalid"> 存在しないライセンス番号 </span>
+  <span class="license-check-not-exist"> 存在しないライセンス番号 </span>
 <% end %>
 </div>
 
-
-<p><strong> 顧客情報の確認 </strong></p>
+<div class="customer-search-header">
+  <p><strong> 顧客情報の確認 </strong></p>
+</div>
 
 <%= search_form_for @q, url: customer_search_path(@project) do |f| %>
 <div class="customer-search">
@@ -46,6 +63,9 @@
   <%= f.label :family_name_alphabet_or_given_name_alphabet_cont, "氏名(英)の一部", class: "customer-search-label"  %>
   <%= f.search_field :family_name_alphabet_or_given_name_alphabet_cont, class: "customer-search-input" %>
 </div>
+<% if @license %>
+  <%= hidden_field_tag :license_num, @license.license_num %>
+<% end %>
 <div class="customer-search-button">
   <%= f.submit "検索" %>
 </div>
@@ -76,7 +96,9 @@
     <% end %>
     </tbody>
 </table>
-  <%= hidden_field_tag :license_num, "" %>
+<% if @license %>
+  <%= hidden_field_tag :license_num, @license.license_num %>
+<% end %>
   <div class="customer-search-button">
     <%= submit_tag  'チケット作成'  %>
   </div>

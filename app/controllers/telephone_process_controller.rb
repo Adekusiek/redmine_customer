@@ -11,13 +11,13 @@ class TelephoneProcessController < ApplicationController
       nil
     end
 
-    return @license = nil if !params[:license] #first access to index page
-    license_number = if params[:license][:license_number]
-      params[:license][:license_number].to_s.tr("０-９", "0-9")
+    return @license = nil if !params[:license_check] #first access to index page
+    license_number = if params[:license_check][:license_number]
+      params[:license_check][:license_number].to_s.tr("０-９", "0-9")
     else
       ""
     end
-    search_str = params[:license][:CM_category] + "-" + license_number
+    search_str = params[:license_check][:CM_category] + "-" + license_number
     @license = License.find_by(license_num: search_str)
     @nil_flag = true if @license.nil?
 
@@ -26,6 +26,8 @@ class TelephoneProcessController < ApplicationController
 
   def search
     index
+    @license = License.find_by(license_num: params[:license_num])
+    @nil_flag = true if @license.nil?
     render :index
   end
 
