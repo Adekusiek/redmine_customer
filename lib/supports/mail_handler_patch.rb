@@ -62,7 +62,7 @@ module Supports
 			enquete.customer_enquete.update(last_reply_date: Date.today)
 
 			#Mailer
-			EnqueteReplyMailer.enquete_send_mailer(issue, enquete.customer).deliver
+			EnqueteMailer.enquete_reply_mailer(issue, enquete.customer).deliver
 	  end
 
 		# Deliver ticket number

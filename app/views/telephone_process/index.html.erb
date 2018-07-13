@@ -73,7 +73,7 @@
 
 <div class="customer-search-result">
 <% if @customers %>
-<%= form_tag(support_new_with_input_path(@project), method: "POST") do %>
+<%= form_tag(project_supports_new_path(@project), method: "GET") do %>
 <table>
   <thead>
   <tr>

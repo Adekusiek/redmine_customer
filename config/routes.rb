@@ -20,8 +20,6 @@ Rails.application.routes.draw do
 	get 'project/:project_id/enquetes'=> 'enquetes#index'
 	get 'project/:project_id/telephone_process/' => 'telephone_process#index', as: "telephone_process"
 	get 'project/:project_id/telephone_process/search' => 'telephone_process#search', as: "customer_search"
-	post 'project/:project_id/supports/new_with_input' => 'supports#new_with_input', as: "support_new_with_input"
 	patch 'skip_enquete/:id' => 'supports#skip_enquete', as: "skip_enquete"
-
 
 end
