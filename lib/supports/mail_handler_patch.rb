@@ -8,6 +8,7 @@ module Supports
 		MESSAGE_ID_RE = %r{^<?redmine\.([a-z0-9_]+)\-(\d+)\.\d+(\.[a-f0-9]+)?@}
 		ISSUE_REPLY_SUBJECT_RE = %r{\[(?:[^\]]*\s+)?#(\d+)\]}
 		MESSAGE_REPLY_SUBJECT_RE = %r{\[[^\]]*msg(\d+)\]}
+		AUTOCLOSE_SKIPPER = /^CarMaker\sClose\sConfirmation/
 
 		def dispatch
 	    headers = [email.in_reply_to, email.references].flatten.compact
@@ -22,12 +23,16 @@ module Supports
 	      else
 	        # ignoring it
 	      end
+			elsif subject.match(AUTOCLOSE_SKIPPER)
+				# SKIP ISSUE REGISTERATION
+				# THIS MATCHES ON CLOSE CONFIRMATION MAIL
 			elsif m = subject.match(ENQUETE_AUTO_REPLY)
 				receive_enquete_reply(m[1].to_i)
 			elsif m = subject.match(CREATE_ISSUE)
 				receive_create_issue
 	    elsif m = subject.match(ISSUE_REPLY_SUBJECT_RE)
 				receive_issue_reply(m[1].to_i)
+				update_ticket_status(m[1].to_i)
 	    elsif m = subject.match(MESSAGE_REPLY_SUBJECT_RE)
 				receive_message_reply(m[1].to_i)
 	    else
@@ -44,6 +49,15 @@ module Supports
 	    logger.error "MailHandler: unauthorized attempt from #{user}" if logger
 	    false
 	  end
+
+		def update_ticket_status(issue_id)
+			issue = Issue.find_by_id(issue_id)
+	    return unless issue
+
+			issue.update_column(:auto_close_flag, true)
+			# Update new ticket status to answered
+			issue.update_new_to_answer
+		end
 
 		# Send automatic reply to someone replied to enquete
 	  def receive_enquete_reply(issue_id, from_journal=nil)
@@ -69,7 +83,7 @@ module Supports
 	  def receive_create_issue
 			identifier = "cs" + Date.today.year.to_s + "jp"
 			project = Project.find_by(identifier: identifier)
-#			project = target_project
+
 	    # check permission
 	    unless handler_options[:no_permission_check]
 	      raise UnauthorizedAction unless user.allowed_to?(:add_issues, project)
@@ -88,21 +102,11 @@ module Supports
 	      customer.save
 	    end
 			# give cs number
-	    issue_num = project.issues.count + 1
-
-	    if issue_num < 10
-	      issue_num = "00" + issue_num.to_s
-	    elsif issue_num < 100
-	      issue_num = "0" + issue_num.to_s
-	    else
-	      issue_num = issue_num.to_s
-	    end
-	    subject_header = "CS" + Date.today.year.to_s + "JP" + issue_num
+	    subject_header = "CS" + Date.today.year.to_s + "JP" + project.get_csnum
 
 			# search company code from email
 	    domain = email.split("@")[1]
-	    company_code = "XXX"
-	    company_code = CompanyCode.find_by(domain: domain).code if CompanyCode.find_by(domain: domain)
+			company_code = CompanyCode.find_by(domain: domain) ? CompanyCode.find_by(domain: domain).code : "XXX"
 
 	    issue = Issue.create({
 	                project: project,

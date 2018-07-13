@@ -1,5 +1,5 @@
 
-class SendEnquete
+module SendEnquete
   def self.search
     issues = Issue.where(updated_on: 1.month.ago..Time.now)
     # search status id of closed issue

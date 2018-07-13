@@ -89,10 +89,8 @@
       <div class="label">ステータス:</div>
           <% if !@enquete %>
             未送信
-          <% elsif @enquete.sent_date < Date.new(2016, 12, 31) %>
-            送信スキップ
           <% else %>
-            送信済み
+            <%= @enquete.show_enquete_status %>
           <% end %>
       </div>
       <div class="attribute">
@@ -100,8 +98,12 @@
           <% if !@enquete %>
             <%= link_to "アンケートスキップ", skip_enquete_path(@issue), method: "PATCH", class: "btn" %>
           <% else %>
-            送信済み
+            <%= @enquete.show_enquete_status %>
           <% end %>
+      </div>
+      <div class="attribute">
+        <div class="label">自動クローズメール送信設定:</div>
+          <%= link_to @issue.show_auto_close_btn, change_auto_close_flag_path(@issue), method: "PATCH", class: "btn" %>
       </div>
 
     </div>

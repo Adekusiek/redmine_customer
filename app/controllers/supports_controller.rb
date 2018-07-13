@@ -24,21 +24,11 @@ class SupportsController < ApplicationController
     end
 
 # give cs number
-    issue_num = @project.issues.count + 1
-
-    if issue_num < 10
-      issue_num = "00" + issue_num.to_s
-    elsif issue_num < 100
-      issue_num = "0" + issue_num.to_s
-    else
-      issue_num = issue_num.to_s
-    end
-    subject_header = "CS" + Date.today.year.to_s + "JP" + issue_num
+    subject_header = "CS" + Date.today.year.to_s + "JP" + @project.get_csnum
 
 # search company code from email
     domain = params[:session][:email].split("@")[1]
-    company_code = "XXX"
-    company_code = CompanyCode.find_by(domain: domain).code if CompanyCode.find_by(domain: domain)
+    company_code = CompanyCode.find_by(domain: domain) ? CompanyCode.find_by(domain: domain).code : "XXX"
 
     issue = Issue.create({
                 project_id: @project,
@@ -119,7 +109,19 @@ class SupportsController < ApplicationController
     end
 
     redirect_to :back
+  end
 
+  def change_auto_close_flag
+    issue = Issue.find(params[:id])
+    if issue.auto_close_flag
+       issue.update(auto_close_flag: false)
+       flash[:notice] = "自動クローズ機能オフ"
+    else
+       issue.update(auto_close_flag: true)
+       flash[:notice] = "自動クローズ機能オン"
+    end
+
+    redirect_to :back
   end
 
   private
