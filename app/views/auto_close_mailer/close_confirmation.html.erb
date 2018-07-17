@@ -1,12 +1,11 @@
-<% if customer.company && customer.family_name %>
-  <p><%= customer.company  %><br>
-     <%= customer.family_name %> 様</p>
+<% if @customer.company && @customer.family_name %>
+  <p><%= @customer.company  %><br>
+     <%= @customer.family_name %> 様</p>
 <% end %>
 
 <p>お世話になっております。<br><p>
 
-<p>表記[<%= issue.subject %> #<%= issue.id %>] にてお問い合わせいただいておりました件、その後状況はいかがでしょうか。<br>
+<p>表記[<%= @issue.subject %> #<%= @issue.id %>] にてお問い合わせいただいておりました件、その後状況はいかがでしょうか。<br>
 特に追加のご質問が無いようでしたら一旦クローズとさせていただきたく存じます。<br>
 <br>
-お忙しい中恐れ入りますがご一報いただけますと幸いです。<br>
 よろしくお願いいたします。</p>
