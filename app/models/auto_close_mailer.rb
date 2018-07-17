@@ -2,8 +2,7 @@ class AutoCloseMailer < Mailer
 
   def new_status_warning(issue)
     @issue = issue
-      mail(to: issue.author.email_address.address, bcc: 'keisuke.kawahara@ipg-automotive.com', \
-        subject: "REDMINE SYSTEM WARNING")
+      mail(to: issue.author.email_address.address, subject: "REDMINE SYSTEM WARNING")
 
   end
 
