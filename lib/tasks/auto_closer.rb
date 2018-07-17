@@ -15,7 +15,7 @@ module AutoCloser
   def self.send_close_confirmation
 
     answered = IssueStatus.find_by(name: "Answered")
-    issues = Issue.where(updated_on: 17.day.ago..13.day.ago, status_id: answered.id, auto_close_flag: true)
+    issues = Issue.where(updated_on: 28.day.ago..14.day.ago, status_id: answered.id, auto_close_flag: true)
 
     issues.each do |issue|
       # skip if the project is not Customer support project children or older than 2018
