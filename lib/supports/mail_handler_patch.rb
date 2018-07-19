@@ -33,8 +33,11 @@ module Supports
 			elsif m = subject.match(CREATE_ISSUE)
 				receive_create_issue
 	    elsif m = subject.match(ISSUE_REPLY_SUBJECT_RE)
-				receive_issue_reply(m[1].to_i)
 				update_ticket_status(m[1].to_i)
+				# recieve_issue_reply returnsj journal
+				# the journal object must be returned from dispatch method to recognize as journal already used
+				# if not the same email would be registered eternally
+				receive_issue_reply(m[1].to_i)
 	    elsif m = subject.match(MESSAGE_REPLY_SUBJECT_RE)
 				receive_message_reply(m[1].to_i)
 	    else
