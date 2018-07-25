@@ -39,7 +39,7 @@
         <% if @issue_customer.license.nil? %>
           <div class="value"> N/A </div>
         <% else %>
-          <div class="value"><%= @issue_customer.license.license_num %> <%= @issue_customer.license.license_type %> <%= @issue_customer.license.show_office_or_hil %> <%= @issue_customer.license.show_hil_type_description %></div>
+          <div class="value"><%= @issue_customer.license.license_num %> <%= @issue_customer.license.license_type %> <%= @issue_customer.license.show_office_or_hil %> <!-- <%= @issue_customer.license.show_hil_type_description %> --></div>
         <% end %>
       </div>
       <div class="attribute">

@@ -38,6 +38,7 @@ module AutoCloser
     issues = Issue.where("updated_on < ? and status_id = ?", 18.day.ago, answered.id)
 
     issues.each do |issue|
+      next unless issue.project.parent_id == 3 && issue.project.id > 18
       issue.status = closed
       issue.save
     end

@@ -74,6 +74,8 @@ module UpdateDb
       # we do not care if it is concerto license
       if license_code_first.last == "H"
         hil_flag = true
+        # FIXME: This part must be updated in the future
+        # Current license file does not have the identifier
         hil_type_id = if license_code_split[2].include?("DS")
           2
         elsif license_code_split[2].include?("LC")
