@@ -76,7 +76,7 @@ module Supports
 	      end
 	    end
 			enquete = Enquete.find_by(issue_id: issue_id)
-			return if enquete.recieved_flag == 1
+			return if enquete.recieved_flag
 			enquete.update(recieved_flag: true)
 			enquete.customer_enquete.update(last_reply_date: Date.today)
 
