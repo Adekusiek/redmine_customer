@@ -10,7 +10,7 @@ class AutoCloseMailer < Mailer
     @issue = issue
     @customer = customer
     mail(to: customer.email, cc: issue.author.email_address.address, \
-      bcc: 'keisuke.kawahara@ipg-automotive.com', \
+      bcc: 'hiroyasu.takase@ipg-automotive.com', \
       subject: "CarMaker Close Confirmation [#{issue.subject} ##{issue.id}]")
   end
 end
