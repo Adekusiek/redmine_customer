@@ -14,14 +14,8 @@ class SupportsController < ApplicationController
 
   def create
 
-    customer = Customer.find_by(email: params[:session][:email])
-
-# if no customer is attached to the email, create new customer and customer_enquete to save the date of last reply and preference of receiving mail
-    unless customer
-      customer = Customer.new(email: params[:session][:email])
-      customer.build_customer_enquete
-      customer.save
-    end
+# if no customer is attached to the email, create new customer to save the date of last reply and preference of receiving mail
+    customer = Customer.find_or_create_by(email: params[:session][:email])
 
 # give cs number
     subject_header = "CS" + Date.today.year.to_s + "JP" + @project.get_csnum
@@ -30,6 +24,15 @@ class SupportsController < ApplicationController
     domain = params[:session][:email].split("@")[1]
     company_code = CompanyCode.find_by(domain: domain) ? CompanyCode.find_by(domain: domain).code : "XXX"
 
+
+    # check license status
+    license_id = if params[:session][:license_num]
+      license = License.find_by(license_num: params[:session][:license_num])
+      license ? license.id : 0
+    else
+      0
+    end
+
     issue = Issue.create({
                 project_id: @project,
                 subject: subject_header + "(" + company_code + ")",
@@ -37,21 +40,11 @@ class SupportsController < ApplicationController
                 assigned_to_id: User.current.id,
                 tracker_id: 3,
                 author_id: User.current.id,
-                start_date: Date.today
-      })
-
-# check license status
-    license_id = 0
-    if params[:session][:license_num]
-      license = License.find_by(license_num: params[:session][:license_num])
-      license_id = license.id  if license
-    end
-
-    IssueCustomer.create({
-                issue_id: issue.id,
+                start_date: Date.today,
                 customer_id: customer.id,
                 license_id: license_id
       })
+
 
 # prepare called value
     if params[:session][:send_flag] == "0"
@@ -69,16 +62,17 @@ class SupportsController < ApplicationController
 
 	def update
 
-    issue_customer = IssueCustomer.find_by(issue_id: params[:issue_id])
+    issue = Issue.find(params[:issue_id])
 
     customer = Customer.where(email: params[:session][:email]).first_or_create
-    issue_customer.customer_id = customer.id
+    issue.customer_id = customer.id
 
     license = License.find_by(license_num: params[:session][:license_num])
-    issue_customer.license_id = license.id if license
+    issue.license_id = license.id if license
 
-    issue_customer.save
-    redirect_to issue_path(issue_customer.issue)
+    flash[:notice] = "チケット更新失敗" unless issue.save
+
+    redirect_to issue_path(issue)
 
 	end
 
@@ -93,13 +87,12 @@ class SupportsController < ApplicationController
   end
 
   def skip_enquete
-    issue_customer = IssueCustomer.find_by(issue_id: params[:id])
+    issue = Issue.find(params[:id])
     enquete = Enquete.new({
       sent_date: Date.new(2016, 1, 1),
-      customer_id: issue_customer.customer_id,
-      issue_id: issue_customer.issue_id,
-      project_id: issue_customer.issue.project.id,
-      customer_enquete_id: issue_customer.customer.customer_enquete.id
+      customer_id: issue.customer_id,
+      issue_id: issue.id,
+      project_id: issue.project.id,
       })
 
     if enquete.save!

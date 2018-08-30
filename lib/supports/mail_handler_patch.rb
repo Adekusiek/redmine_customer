@@ -78,7 +78,7 @@ module Supports
 			enquete = Enquete.find_by(issue_id: issue_id)
 			return if enquete.recieved_flag
 			enquete.update(recieved_flag: true)
-			enquete.customer_enquete.update(last_reply_date: Date.today)
+			enquete.customer.update(last_reply_date: Date.today)
 
 			#Mailer
 			EnqueteMailer.enquete_reply_mailer(issue, enquete.customer).deliver
@@ -98,20 +98,21 @@ module Supports
 			email = extract_keyword!(cleaned_up_text_body, :email).split("<mailto")[0].strip
 			license = extract_keyword!(cleaned_up_text_body, :license).strip
 
-			customer = Customer.find_by(email: email)
+			customer = Customer.find_or_create_by(email: email)
 
-			# if no customer is attached to the email, create new customer and customer_enquete to save the date of last reply and preference of receiving mail
-	    unless customer
-	      customer = Customer.new(email: email)
-	      customer.build_customer_enquete
-	      customer.save
-	    end
 			# give cs number
 	    subject_header = "CS" + Date.today.year.to_s + "JP" + project.get_csnum
 
 			# search company code from email
 	    domain = email.split("@")[1]
 			company_code = CompanyCode.find_by(domain: domain) ? CompanyCode.find_by(domain: domain).code : "XXX"
+
+			# check license status
+			license_id = if license_obj = License.find_by(license_num: license)
+				license_obj.id
+			else
+				0
+			end
 
 	    issue = Issue.create({
 	                project: project,
@@ -120,21 +121,11 @@ module Supports
 	                assigned_to: user,
 	                tracker_id: 3,
 	                author: user,
-	                start_date: Date.today
-	      })
-
-			# check license status
-	    license_id = 0
-	    if license
-	      license_obj = License.find_by(license_num: license)
-	      license_id = license_obj.id  if license_obj
-	    end
-
-	    IssueCustomer.create({
-	                issue_id: issue.id,
-	                customer_id: customer.id,
+	                start_date: Date.today,
+									customer_id: customer.id,
 	                license_id: license_id
 	      })
+
 
 			#Mailer
 			PublishTicketMailer.send_mailer(issue).deliver

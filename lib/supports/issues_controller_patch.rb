@@ -4,8 +4,9 @@ module Supports
 	module IssuesControllerPatch
 		def show
 			# prepare instances for hook view
-			@issue_customer = IssueCustomer.where(issue_id: @issue.id).first_or_create
-			@enquete = Enquete.find_by(issue_id: @issue.id)
+			@customer = @issue.customer
+			@license = @issue.license
+			@enquete = @issue.enquete
 			# default show controller
 			super
 		end

@@ -22,23 +22,22 @@ module SendEnquete
   end
 
   def self.send(issue)
-    issue_customer = IssueCustomer.find_by(issue_id: issue.id)
-    return if !issue_customer || !issue_customer.customer
+    customer = issue.customer
+    return if !customer
     # Check if customer accept receive the enquete mail and if replied within 6 months
-    if issue_customer.customer.customer_enquete.accept_flag == true && issue_customer.customer.customer_enquete.last_reply_date <  Date.today - 3.months
+    if customer.accept_flag == true && customer.last_reply_date <  Date.today - 3.months
       # Check if enquete mail is sent within 1 month for another ticket
-      latest_enquete = Enquete.where(customer_id: issue_customer.customer.id).order(sent_date: "DESC").first
+      latest_enquete = Enquete.where(customer_id: customer.id).order(sent_date: "DESC").first
       if latest_enquete.nil? || latest_enquete.sent_date < Date.today - 1.months
 
         Enquete.create({
           sent_date: Date.today,
-          customer_id: issue_customer.customer.id,
+          customer_id: customer.id,
           project_id: issue.project.id,
           issue_id: issue.id,
-          customer_enquete_id: issue_customer.customer.customer_enquete.id
           })
         #Mailer
-        EnqueteMailer.enquete_send_mailer(issue, issue_customer.customer).deliver
+        EnqueteMailer.enquete_send_mailer(issue, customer).deliver
 
         return
       end
@@ -46,10 +45,9 @@ module SendEnquete
     # if enquete mail is not delivered, create dummy enquete
     Enquete.create({
       sent_date: "2016-01-01",
-      customer_id: issue_customer.customer.id,
+      customer_id: customer.id,
       project_id: issue.project.id,
       issue_id: issue.id,
-      customer_enquete_id: issue_customer.customer.customer_enquete.id
       })
     puts "skip #{issue.subject}"
   end

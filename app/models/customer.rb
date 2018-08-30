@@ -1,8 +1,7 @@
 class Customer < ActiveRecord::Base
   unloadable
-  has_many :issue_customers
-  has_one :customer_enquete
-
+  has_many :issues
+  
   def full_name
     self.family_name ||= ""
     self.given_name ||= ""
