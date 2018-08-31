@@ -1,6 +1,6 @@
 class License < ActiveRecord::Base
   unloadable
-  has_many :issue_customers
+  belongs_to :issues
 
   # NOTE: hil_typeにてHILの種類を設定したが、いらない
   def show_hil_type_description

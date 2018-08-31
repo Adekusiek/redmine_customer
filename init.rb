@@ -1,6 +1,12 @@
 require 'redmine'
 require_dependency 'supports/hooks'
 
+# FIXME: issueからのリレーションをpatchで追加する方法がわからなかったため。
+# warningが出る
+Dir[Rails.root.join('plugins/issue_customers/lib/monkey_patches/*.rb')].sort.each do |file|
+  require file
+end
+
 Rails.configuration.to_prepare do
 	require_dependency 'issues_controller'
 	IssuesController.send :prepend, Supports::IssuesControllerPatch
@@ -9,6 +15,8 @@ Rails.configuration.to_prepare do
 	MailHandler.send :prepend, Supports::MailHandlerPatch
 
 	Project.send :prepend, Supports::ProjectPatch
+
+	require_dependency 'issue'
 	Issue.send :prepend, Supports::IssuePatch
 end
 

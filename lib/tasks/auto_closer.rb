@@ -21,10 +21,10 @@ module AutoCloser
       # skip if the project is not Customer support project children or older than 2018
       next unless issue.project.parent_id == 3 && issue.project.id > 18
 
-      issue_customer = IssueCustomer.find_by(issue_id: issue.id)
-      return if !issue_customer || !issue_customer.customer
+      customer = issue.customer
+      return if !customer
 
-      AutoCloseMailer.close_confirmation(issue, issue_customer.customer).deliver
+      AutoCloseMailer.close_confirmation(issue, customer).deliver
       # NOTE: update_column does not touch timestamp
       issue.update_column(:auto_close_flag, false)
     end

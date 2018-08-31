@@ -4,13 +4,13 @@
     <div class="splitcontentleft">
       <div class="attribute">
         <div class="label"><strong>Email:</strong></div>
-        <div class="value"><%= @issue_customer.customer.email if @issue_customer.customer %></div>
+        <div class="value"><%= @customer.email if @customer %></div>
       </div>
       <div class="attribute">
         <div class="label"><strong>Name:</strong></div>
-        <div class="value"><%= @issue_customer.customer.family_name if @issue_customer.customer %>
-          <%= @issue_customer.customer.given_name if @issue_customer.customer %></div>
-        <% if @issue_customer.customer.nil? || (@issue_customer.customer.family_name.blank? && @issue_customer.customer.given_name.blank?) %>
+        <div class="value"><%= @customer.family_name if @customer %>
+          <%= @customer.given_name if @customer %></div>
+        <% if @customer.nil? || (@customer.family_name.blank? && @customer.given_name.blank?) %>
           <div class="value"> N/A </div>
         <% end %>
       </div>
@@ -19,15 +19,15 @@
     <div class="splitcontentleft">
       <div class="attribute">
         <div class="label"><strong>Company:</strong></div>
-        <div class="value"><%= @issue_customer.customer.company if @issue_customer.customer %></div>
-        <% if @issue_customer.customer.nil? || @issue_customer.customer.company.blank? %>
+        <div class="value"><%= @customer.company if @customer %></div>
+        <% if @customer.nil? || @customer.company.blank? %>
           <div class="value"> N/A </div>
         <% end %>
       </div>
       <div class="attribute">
         <div class="label"><strong>Department:</strong></div>
-        <div class="value"><%= @issue_customer.customer.dept if @issue_customer.customer %></div>
-        <% if @issue_customer.customer.nil? || @issue_customer.customer.dept.blank? %>
+        <div class="value"><%= @customer.dept if @customer %></div>
+        <% if @customer.nil? || @customer.dept.blank? %>
           <div class="value"> N/A </div>
         <% end %>
       </div>
@@ -36,18 +36,18 @@
     <div class="splitcontentleft">
       <div class="attribute">
         <div class="label"><strong>License Number:</strong></div>
-        <% if @issue_customer.license.nil? %>
+        <% if @license.nil? %>
           <div class="value"> N/A </div>
         <% else %>
-          <div class="value"><%= @issue_customer.license.license_num %> <%= @issue_customer.license.license_type %> <%= @issue_customer.license.show_office_or_hil %> <!-- <%= @issue_customer.license.show_hil_type_description %> --></div>
+          <div class="value"><%= @license.license_num %> <%= @license.license_type %> <%= @license.show_office_or_hil %> <!-- <%= @license.show_hil_type_description %> --></div>
         <% end %>
       </div>
       <div class="attribute">
         <div class="label"><strong>Status:</strong></div>
-        <% if @issue_customer.license.nil? || @issue_customer.license.license_num == 0 %>
+        <% if @license.nil? || @license.license_num == 0 %>
           <div class="value"> N/A </div>
         <% else %>
-          <% if @issue_customer.license.status %>
+          <% if @license.status %>
             <div class="value">Activated</div>
           <% else %>
             <div class="value">Deactivated</div>
@@ -68,17 +68,17 @@
       <p><strong>顧客情報の更新</strong></p>
 
       <%= label :session, "メール", style: "display: block; float: left; width: 100px" %>
-      <% if @issue_customer.customer.nil? %>
+      <% if @customer.nil? %>
         <%= text_field :session, :email, value: "N/A", style: "width: 250px" %>
       <% else %>
-        <%= text_field :session, :email, value: @issue_customer.customer.email, style: "width: 250px" %>
+        <%= text_field :session, :email, value: @customer.email, style: "width: 250px" %>
       <% end %>
       <br/>
       <%= label :session, "ライセンス番号", style: "display: block; float: left; width: 100px" %>
-      <% if @issue_customer.license.nil? || @issue_customer.license.license_num == 0 %>
+      <% if @license.nil? || @license.license_num == 0 %>
         <%= text_field :session, :license_num, value: "N/A", style: "width: 250px" %>
       <% else %>
-        <%= text_field :session, :license_num, value: @issue_customer.license.license_num, style: "width: 250px" %>
+        <%= text_field :session, :license_num, value: @license.license_num, style: "width: 250px" %>
       <% end %>
       <%= submit_tag  '更新'  %>
         <% end %>

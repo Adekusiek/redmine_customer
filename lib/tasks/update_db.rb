@@ -15,8 +15,8 @@ module UpdateDb
       #   company:     mysheet.cell(i, 7),
       #   dept:        mysheet.cell(i, 8)
       #      })
-      customer = Customer.find_by(email: email)
-      if customer
+
+      if customer = Customer.find_by(email: email)
           customer.update({
             family_name: mysheet.cell(i, 5),
             family_name_alphabet: mysheet.cell(i,79),
@@ -27,7 +27,7 @@ module UpdateDb
             dept:        mysheet.cell(i, 8)
                })
       else
-        customer = Customer.new({
+        customer = Customer.create({
           email:       email,
           family_name: mysheet.cell(i, 5),
           family_name_alphabet: mysheet.cell(i,79),
@@ -37,8 +37,6 @@ module UpdateDb
           company:     mysheet.cell(i, 7),
           dept:        mysheet.cell(i, 8)
              })
-        customer.build_customer_enquete
-        customer.save
       end
     end
   end

@@ -1,6 +1,7 @@
 module Supports
 	module IssuePatch
 
+
 		def show_auto_close_btn
 			self.auto_close_flag ? "クローズメールを送らない" : "クローズメールを送る"
 		end
