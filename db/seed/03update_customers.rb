@@ -6,7 +6,7 @@ class UpdateCustomers
       customer_enquetes.each do |customer_enquete|
         customer = customer_enquete.customer
         next if customer.nil?
-        customer.update(
+        customer.update_columns(
           accept_flag: customer_enquete.accept_flag,
           last_reply_date: customer_enquete.last_reply_date
         )
