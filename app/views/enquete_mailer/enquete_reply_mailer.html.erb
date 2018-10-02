@@ -1,12 +1,44 @@
-<% if @customer.company && @customer.family_name %>
-  <p><%= @customer.company  %><br>
-     <%= @customer.family_name %> 様</p>
-<% end %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>HTML</title>
+			<style type="text/css">
+      			body { font-family: 'Meiryo UI', 'Arial', 'メイリオ', cursive; }
+    		</style>
+	</head>
+ 	
+ 	<body>
 
-<p>いつもお世話になっております。<br>
-お忙しい中、顧客満足度調査にご回答いただきありがとうございました。今後のサービス提供へ参考にさせていただきます。今後ともどうぞよろしくお願い申し上げます。
-</p>
+		<% if @customer.company && @customer.family_name %>
+		  <p><%= @customer.company  %><br>
+		     <%= @customer.family_name %> 様</p>
+		<% end %>
 
-<p>IPG Automotive株式会社<br>
-CarMakerサービスチーム
-</p>
+		<p>いつもお世話になっております。</p>
+		
+		<p>
+		お忙しい中、顧客満足度調査にご回答いただきありがとうございました。<br>
+		今後のサービス提供へ参考にさせていただきます。<br><br>
+		今後ともどうぞよろしくお願い申し上げます。
+		</p>
+
+		<p>
+		-------------------------------------------------------<br>
+		CarMakerサービスチーム<br><br>
+		
+		IPG Automotive株式会社<br>
+		〒105-0003 東京都港区西新橋二丁目9番1号　PMO西新橋9F<br><br>
+
+		Phone: 03-5826-4303(サポート専用ダイヤル) Fax: 03-5826-4302<br>
+		E-mail: carmaker-service-jp@ipg-automotive.com<br>
+		URL: www.ipg-automotive.com<br><br>
+
+		SOLUTIONS FOR VIRTUAL TEST DRIVING<br><br>
+
+		このメールおよび/または添付ファイルの情報は機密であり、法的に秘匿特権を有します。もし受取人でない場合は、このメールおよび/または添付ファイルを参照、配布、コピーすることは固く禁止されております。誤って受信された場合は、速やかに弊社までメールにてご連絡の上、このメールおよび/または添付ファイルの削除をいただけますようお願いいたします。<br>
+		</p>
+
+		
+	</body>
+</html>

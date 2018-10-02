@@ -1,13 +1,45 @@
-<% if @customer.company && @customer.family_name %>
-  <p><%= @customer.company  %><br>
-     <%= @customer.family_name %> 様</p>
-<% end %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>HTML</title>
+			<style type="text/css">
+      			body { font-family: 'Meiryo UI', 'Arial', 'メイリオ', cursive; }
+    		</style>
+	</head>
+ 	
+ 	<body>
 
-<p>お世話になっております。<br><p>
+		<p>※ 本メールはクローズ確認の自動送信メールです ※<br>
+		※ クローズでよろしい場合、このメールに返信して頂く必要はございません ※</p>
 
-<p>表記[<%= @issue.subject %> #<%= @issue.id %>] にてお問い合わせいただいておりました件、その後状況はいかがでしょうか。<br>
-特に追加のご質問が無いようでしたら一旦クローズとさせていただきたく存じます。<br>
-<br>
-よろしくお願いいたします。</p>
+		<% if @customer.company && @customer.family_name %>
+		  <p><%= @customer.company  %><br>
+			 <%= @customer.family_name %> 様</p>
+		<% end %>
 
-<p>※クローズでよろしい場合、このメールに返信して頂く必要はございません。</p>
+		<p>いつもお世話になっております。<br><p>
+
+		<p>表記[<%= @issue.subject %> #<%= @issue.id %>] にてお問い合わせいただいておりました件、その後状況はいかがでしょうか。<br>
+		本件に関わる追加のご質問がございましたらご返信いただきたく存じます。<br>
+		<br>
+		よろしくお願いいたします。</p>
+
+		<p>
+		-------------------------------------------------------<br>
+		CarMakerサービスチーム<br><br>
+		
+		IPG Automotive株式会社<br>
+		〒105-0003 東京都港区西新橋二丁目9番1号　PMO西新橋9F<br><br>
+
+		Phone: 03-5826-4303(サポート専用ダイヤル) Fax: 03-5826-4302<br>
+		E-mail: carmaker-service-jp@ipg-automotive.com<br>
+		URL: www.ipg-automotive.com<br><br>
+
+		SOLUTIONS FOR VIRTUAL TEST DRIVING<br><br>
+
+		このメールおよび/または添付ファイルの情報は機密であり、法的に秘匿特権を有します。もし受取人でない場合は、このメールおよび/または添付ファイルを参照、配布、コピーすることは固く禁止されております。誤って受信された場合は、速やかに弊社までメールにてご連絡の上、このメールおよび/または添付ファイルの削除をいただけますようお願いいたします。<br>
+		</p>
+	
+	</body>
+</html>
